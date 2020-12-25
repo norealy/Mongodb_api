@@ -3,13 +3,13 @@ const { Schema } = mongoose;
 
 const orderSchema = new Schema({
     id_user: { type: String, required: true },
-    bill_date:Date.now(),
+    bill_date:{ type: Date, default: Date.now },
     total_money :Number,
     Orders_details:[
       {
+        //_id
         id_product:String,
-        count_product:String,
-        price:Number
+        count_product:Number
       },
     ]
  });
