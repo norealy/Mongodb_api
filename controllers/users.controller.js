@@ -1,14 +1,53 @@
+require('dotenv').config();
 const User = require('../models/Users.model');
+const Token = require('../models/TokenModel');
+const jws = require('jws')
+const {v4:uuid_V4} = require('uuid')
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
+const secretAccessKey = process.env.ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
+const secretRefeshKey = process.env.REFRESH_TOKEN_KEY || "U2ltcGx5IGVudGVyIHlvdXIgZGF0YSB0aGVuIHB1c2ggdGhlIGVuY29kZSBidXR0b24u";
+const duration = parseInt(process.env.JWT_DURATION || 2400);
+const hmacRefresh = crypto.createHmac('sha256', secretRefeshKey);
+
+// console.log(duration)
+// console.log(typeof secretAccessKey)
+// console.log(secretRefeshKey)
 
 exports.addUser = async (req, res) => {
-	if (req.body) {
-		let usrInfo = req.body;
-		let newuser = new User(usrInfo);
-		await newuser.save(function (err, data) {
-			if (err) return console.error(err);
-			console.log(data);
-			res.send(data);
-		});
+	if (req.body.username&&req.body.username) {
+		const {username,password} = req.body;
+		
+		try {
+			const salt = await bcrypt.genSalt(saltRounds);
+			const hashPassword = await bcrypt.hash(password, salt);
+			const newuser = new User({username,password:hashPassword});
+			const user = await newuser.save();
+			console.log("user",user);
+			const iat = Math.floor(new Date()/1000);
+			const exp = iat + duration;
+			const access_Token =  jws.sign({
+				header: {alg:'HS256',typ:'JWT'},
+				payload: {uid: user._id, iat, exp},
+				secret:secretAccessKey
+			});
+			// console.log(access_Token)
+			const uid_token = uuid_V4();
+			hmacRefresh.update(uid_token);
+			const refresh_token = Buffer.from(hmacRefresh.digest('hex')).toString('base64');
+			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
+			await newToken.save();
+			// console.log("refresh_token",refresh_token)
+			res.status(201).send({user,access_Token:access_Token,refresh_token:refresh_token});
+
+		} catch (error) {
+			// console.log(error)
+			res.send("Error")
+		}
+
+	}else{
+		res.send("Username or password empty !");
 	}
 };
 

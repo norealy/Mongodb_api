@@ -21,7 +21,12 @@ router.post('/add', ordersCtrl.addOrders)
 //     ]
 // }
 
-router.patch('/update', ordersCtrl.EditOrder) // chua duoc
+router.patch('/update', ordersCtrl.EditOrder)
+// {
+//     "id":"5fe56bc980b0ea36aa5823f8",
+//     "id_product":"2",
+//     "count_product":10
+// }
 
 router.get('/list',ordersCtrl.listOrders)
 

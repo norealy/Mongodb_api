@@ -4,23 +4,8 @@ const productCtrl = require('../controllers/product.controller');
 
 
 router.post('/add', productCtrl.addProduct)
-// {
-// 	"username": "username1",
-// 	"password": "password1",
-// 	"fullname": "Nguyen Van Dat",
-// 	"avatar": "",
-// 	"phone": "0332302626",
-// 	"address": "NKT-CG-HN"
-// }
 
 router.put('/update', productCtrl.changeInfo)
-// {
-// 	"id": "5fe4f1796b25df78cdcf26a8",
-// 	"fullname": "Nguyen Van Datttt",
-// 	"avatar": "12133",
-// 	"phone": "0332302626666",
-// 	"address": "NKT-CG-HNNN"
-// }
 
 router.get('/list',productCtrl.listProducts)
 
