@@ -15,10 +15,6 @@ router.get('/register', async (req, res) => {
 
 router.post('/register', Validation.register ,Auth.register);
 
-router.post('/refresh-token', async (req, res) => {
-	res.send("get logout !");
-});
-
 router.get('/logout', async (req, res) => {
 	res.send("get logout !");
 });

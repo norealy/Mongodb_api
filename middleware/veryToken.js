@@ -33,8 +33,8 @@ module.exports.verifyRefreshToken = async function (req,res,next){
         console.log(token_id);
         // lay ra uid_token
 
-        const tokenSuccess = await Tokens.findOne({"user_uid":verified.user_uid,"uid_token":token_id})
-        console.log(tokenSuccess);
+        const tokenSuccess = await Tokens.findOne({"uid_token":token_id}) //"user_uid":verified.user_uid,
+        // console.log(tokenSuccess);
         
         const iat = Math.floor(new Date()/1000);
         const exp = iat + duration;
@@ -52,12 +52,12 @@ module.exports.verifyRefreshToken = async function (req,res,next){
 
 // {
 //     "user": {
-//         "_id": "5fe94f11c5050a616309172a",
-//         "username": "usernameq213",
-//         "password": "$2b$10$rrFuTYblT/Db6II9Qrjs8.f6kngxwgZz65oIeIOAW69Ugom0bGDS2",
+//         "_id": "5fe9582a2d6b5e1309aa7c30",
+//         "username": "usernamet66",
+//         "password": "$2b$10$dm6GhCQ5QrLFF6XcyqHYue91wfL3BwphBLwOSQeuDMuG4Ply1dK1m",
 //         "__v": 0
 //     },
-//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmU5NGYxMWM1MDUwYTYxNjMwOTE3MmEiLCJpYXQiOjE2MDkxMjU2NTIsImV4cCI6MTYwOTEyOTI1Mn0.w67HaMi6gar8cDC_S7Ct_0yM_nv24GMDxWkL-XuuRBs",
-//     "Refresh_Token": "d52c58f387d6e7a1f0c7f0ad7abebe4df64fd7ab9330b70ad7875864115c5fbe2997159d",
-//     "uid_token": "a87fa84a-077d-46de-ad8c-8d90038e01a1"
+//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmU5NTgyYTJkNmI1ZTEzMDlhYTdjMzAiLCJpYXQiOjE2MDkxMjc5NzgsImV4cCI6MTYwOTEzMTU3OH0.Nl0fzb9Swmqm-gO5QJdpBxz0_SRCSu8qGGJ9kVi4fWA",
+//     "Refresh_Token": "d7205facd7dae1a3f0c1ffff29bebe4af04cd7ab916bb70ad7865930100c06ba2d944dcf",
+//     "uid_token": "c409142c-68e7-41bf-afcc-8e8d1caa429c"
 // }
