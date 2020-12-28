@@ -44,14 +44,14 @@ exports.adminLogin = async (req, res) => {
 					payload: { uid: uid, iat, exp },
 					secret: secretAccessKey,
 				});
-				console.log('access_Token', access_Token);
-				res.send({ access_Token: access_Token });
+				console.log('Access_Token', access_Token);
+				return res.send({ access_Token: access_Token });
 			}else{
-				res.send("Wrong username or password");
+				return res.send("Wrong username or password");
 			}
 		}
 	} catch (error) {
-		res.send("Login Fail !");
+		return res.send("Login Fail !");
 	}
 };
 exports.login = async (req, res) => {
@@ -67,14 +67,14 @@ exports.login = async (req, res) => {
 						payload: { uid: uid, iat, exp },
 						secret: secretAccessKey,
 					});
-					console.log('access_Token', access_Token);
-					res.send({ access_Token: access_Token });
+					console.log('Access_Token', access_Token);
+					return res.send({ access_Token: access_Token });
 				}else{
-					res.send("Wrong username or password");
+					return res.send("Wrong username or password");
 				}
 			}
 		} catch (error) {
-			res.send("Login Fail !");
+			return res.send("Login Fail !");
 		}
 };
 
@@ -86,7 +86,6 @@ exports.register = async (req, res) => {
 			const hashPassword = await bcrypt.hash(password, salt);
 			const newuser = new User({username,password:hashPassword,email:email,phone:phone});
 			const user = await newuser.save();
-			console.log("user",user);
 			const iat = Math.floor(new Date()/1000);
 			const exp = iat + duration;
 			const access_Token =  jws.sign({
@@ -98,15 +97,14 @@ exports.register = async (req, res) => {
 			const refresh_token = Encryption.encryptoken(uid_token)
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
-			console.log("refresh_token",refresh_token)
-			res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
+			return res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
 
 		} catch (error) {
 			console.log(error)
-			res.send("Username exist")
+			return res.send("Username exist")
 		}
 
 	}else{
-		res.send("Username or password empty !");
+		return res.send("Username or password empty !");
 	}
 };

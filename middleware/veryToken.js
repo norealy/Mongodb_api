@@ -62,15 +62,16 @@ module.exports.verifyADminAccessToken =async function (req,res,next){
     console.log(accessToken)
     if(!accessToken) return res.status(401).send('Access Denis !')
     try {
-        console.log("verified")
         const verified = jws.verify(accessToken,alg,secretAccessKey);
-        console.log(verified)
+        console.log("verified : ",verified);
         if(verified){
             const jwsData = jws.decode(accessToken)
             const uid = jwsData.payload.uid;
             console.log(uid)
             const admin = await AdminModel.findOne({"_id":uid})
-            console.log(admin)
+            if(admin===null){
+                return res.status(400).send('Permission denied !')
+            }
             return next();
         }
         return res.status(400).send('Invalid Token')
@@ -80,16 +81,16 @@ module.exports.verifyADminAccessToken =async function (req,res,next){
 }
 // {
 //     "Amin": {
-//         "_id": "5fea00ddf2cd012ee45a2bd4",
-//         "username": "admin328",
-//         "password": "$2b$10$UlegsRDz4dZwhJUMNokYDeozn8tgBdIQtNFmRGU7cB0TloUJchfeO",
-//         "email": "xdatgd223@gmail.com",
+//         "_id": "5fea0949682b303a7bf1c697",
+//         "username": "admin3288",
+//         "password": "$2b$10$7Pp0Ei6yRCjFyYDqVGXxvOotpDXwNVTnKpC57K3oiGelQRAngLZm6",
+//         "email": "admin@gmail.com",
 //         "phone": "0332302626",
 //         "__v": 0
 //     },
-//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhMDBkZGYyY2QwMTJlZTQ1YTJiZDQiLCJpYXQiOjE2MDkxNzExNjUsImV4cCI6MTYwOTE3NDc2NX0.QOG9LylUahgTvABYgfxCPj0EfvYJIPw7zzpmr4hM6Yw",
-//     "Refresh_Token": "d6230ef182dbb2f5f0c3ffac7cbebe4ca04cd7f3c230e70ad7870335435e02ec2d96169b",
-//     "uid_token": "b7add5a5-486b-472f-9583-8dbab1e740b7"
+//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhMDk0OTY4MmIzMDNhN2JmMWM2OTciLCJpYXQiOjE2MDkxNzMzMjEsImV4cCI6MTYwOTE3NjkyMX0.Uu88EEbHHSGjJDTdYkNv1Zzs50Q4MPK3nquaIVYTpBo",
+//     "Refresh_Token": "d07609a4d2dee6a3f0cefffb2fbebe1ff11cd7abc06bb20aded65366140c5fe22b9f1294",
+//     "uid_token": "dbf1405c-98a1-4dc6-a7cf-15225c8929f8"
 // }
 // {
 //     "user": {

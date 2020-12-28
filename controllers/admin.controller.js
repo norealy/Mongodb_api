@@ -31,15 +31,14 @@ exports.addAdmin = async (req, res) => {
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
 			console.log("refresh_token",refresh_token)
-			res.status(201).send({Amin:user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
+			return res.status(201).send({Amin:user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
 
 		} catch (error) {
-			console.log(error)
-			res.send("Username exist")
+			return res.send("Username exist")
 		}
 
 	}else{
-		res.send("Username or password empty !");
+		return res.send("Username or password empty !");
 	}
 };
 
@@ -88,7 +87,7 @@ exports.deleteByID = async (req, res) => {
 			return res.send(data);
 		});
 	} else {
-		req.send('Not remove id empty !');
+		return req.send('Not remove id empty !');
 	}
 };
 exports.deleteByUsername = async (req, res) => {
@@ -98,6 +97,6 @@ exports.deleteByUsername = async (req, res) => {
 			return res.send(data);
 		});
 	} else {
-		req.send('Not remove id empty !');
+		return req.send('Not remove id empty !');
 	}
 };

@@ -4,7 +4,7 @@ const productCtrl = require('../controllers/product.controller');
 const Validation = require('../middleware/checktype');
 const veryToken = require('../middleware/veryToken');
 
-router.post('/add', Validation.validationProduct ,productCtrl.addProduct)
+router.post('/add', veryToken.verifyAccessToken ,Validation.validationProduct ,productCtrl.addProduct)
 // {
 //     "id_seller":"5fe91d9e893b5d1db88ae1d6",
 //     "image":"x",
@@ -25,6 +25,7 @@ router.post('/list/categories', productCtrl.Product_byCategories)
 
 router.delete('/delete/id',veryToken.verifyAccessToken, productCtrl.deleteByID)
 // {
+// "id_user": check co phai  nguoi ban hay khong 
 // 	"id": "5fe4f1926b25df78cdcf26ac"
 // }
 

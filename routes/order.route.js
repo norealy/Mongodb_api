@@ -30,7 +30,8 @@ router.get('/list/:id', ordersCtrl.ordersID)
 
 router.delete('/delete',veryToken.verifyAccessToken,ordersCtrl.deleteByID)
 // {
-// 	"id": "5fe4f1926b25df78cdcf26ac"
+// 	"id": "5fe4f1926b25df78cdcf26ac",
+  
 // }
 
 module.exports = router;
