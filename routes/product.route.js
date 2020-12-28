@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const productCtrl = require('../controllers/product.controller');
 const Validation = require('../middleware/checktype');
+const veryToken = require('../middleware/veryToken');
 
 router.post('/add', Validation.validationProduct ,productCtrl.addProduct)
 // {
@@ -12,9 +13,9 @@ router.post('/add', Validation.validationProduct ,productCtrl.addProduct)
 //     "count_product":12,
 //     "Categories":{"name":"Điện thoại"}
 // }
-router.put('/update', productCtrl.changeInfo)
+router.put('/update',veryToken.verifyAccessToken ,productCtrl.changeInfo)
 
-router.get('/list',productCtrl.listProducts)
+router.get('/list', productCtrl.listProducts)
 
 router.get('/list/:id', productCtrl.ProductID)
 
@@ -22,7 +23,7 @@ router.post('/list/seller', productCtrl.Product_seller)
 
 router.post('/list/categories', productCtrl.Product_byCategories)
 
-router.delete('/delete/id', productCtrl.deleteByID)
+router.delete('/delete/id',veryToken.verifyAccessToken, productCtrl.deleteByID)
 // {
 // 	"id": "5fe4f1926b25df78cdcf26ac"
 // }

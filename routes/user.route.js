@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/users.controller');
+const Validation = require('../middleware/checktype');
+const veryToken = require('../middleware/veryToken');
 
-router.post('/add', userCtrl.addUser)
+router.post('/add' ,veryToken.verifyADminAccessToken, Validation.register, userCtrl.addUser)
 
 router.patch('/update/password', userCtrl.changePass)
 // {
@@ -18,15 +20,15 @@ router.put('/update/info', userCtrl.changeInfo)
 // 	"phone": "0332302626666",
 // 	"address": "NKT-CG-HNNN"
 // }
-router.get('/list',userCtrl.listUsers)
+router.get('/list',veryToken.verifyADminAccessToken,userCtrl.listUsers)
 
-router.get('/list/:id', userCtrl.userID)
+router.get('/list/:id',veryToken.verifyADminAccessToken, userCtrl.userID)
 
-router.delete('/delete/id', userCtrl.deleteByID)
+router.delete('/delete/id',veryToken.verifyADminAccessToken, userCtrl.deleteByID)
 // {
 // 	"id": "5fe4f1926b25df78cdcf26ac"
 // }
-router.delete('/delete/username', userCtrl.deleteByUsername)
+router.delete('/delete/username',veryToken.verifyADminAccessToken, userCtrl.deleteByUsername)
 // {
 // 	"username": "username5"
 // }

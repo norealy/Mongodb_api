@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const ordersCtrl = require('../controllers/orders.controller');
 const Validation = require('../middleware/checktype');
+const veryToken = require('../middleware/veryToken');
 
-router.post('/add',Validation.validationOrder ,ordersCtrl.addOrders)
+router.post('/add',veryToken.verifyAccessToken,Validation.validationOrder,ordersCtrl.addOrders)
 // {
 //     "id_user":"5fe91d9e893b5d1db88ae1d6",
 //     "Orders_details":[{
@@ -16,7 +17,7 @@ router.post('/add',Validation.validationOrder ,ordersCtrl.addOrders)
 //     }]
 // }
 
-router.patch('/update', ordersCtrl.EditOrder)
+router.patch('/update',veryToken.verifyAccessToken,ordersCtrl.EditOrder)
 // {
 //     "id":"5fe56bc980b0ea36aa5823f8",
 //     "id_product":"2",
@@ -27,10 +28,9 @@ router.get('/list',ordersCtrl.listOrders)
 
 router.get('/list/:id', ordersCtrl.ordersID)
 
-router.delete('/delete', ordersCtrl.deleteByID)
+router.delete('/delete',veryToken.verifyAccessToken,ordersCtrl.deleteByID)
 // {
 // 	"id": "5fe4f1926b25df78cdcf26ac"
 // }
 
 module.exports = router;
-

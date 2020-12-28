@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const User = require('../models/Users.model');
+const Admin = require('../models/Admin.model');
 const Encryption = require('../middleware/encryption');
 const Token = require('../models/TokenModel');
 const jws = require('jws');
@@ -20,7 +21,39 @@ async function checkLogin(username, password) {
 		return null;
 	}
 }
-
+async function AdminLogin(username, password) {
+	try {
+		const user = await Admin.findOne({ "username": username });
+		const check = await bcrypt.compare(password, user.password);
+		if(check===true) return user._id;
+		return null;
+	} catch (error) {
+		return null;
+	}
+}
+exports.adminLogin = async (req, res) => {
+	try {
+		const { username, password } = req.body;
+		if(username&&password){
+			const uid = await AdminLogin(username, password);
+			if (uid) {
+				const iat = Math.floor(new Date() / 1000);
+				const exp = iat + duration;
+				const access_Token = jws.sign({
+					header: { alg: 'HS256', typ: 'JWT' },
+					payload: { uid: uid, iat, exp },
+					secret: secretAccessKey,
+				});
+				console.log('access_Token', access_Token);
+				res.send({ access_Token: access_Token });
+			}else{
+				res.send("Wrong username or password");
+			}
+		}
+	} catch (error) {
+		res.send("Login Fail !");
+	}
+};
 exports.login = async (req, res) => {
 		try {
 			const { username, password } = req.body;
