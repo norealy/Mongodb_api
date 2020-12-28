@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/users.controller');
 
-
 router.post('/add', userCtrl.addUser)
 // {
 // 	"username": "username1",
@@ -10,6 +9,7 @@ router.post('/add', userCtrl.addUser)
 // 	"fullname": "Nguyen Van Dat",
 // 	"avatar": "",
 // 	"phone": "0332302626",
+// "email":"xdatgd@gmailcom"
 // 	"address": "NKT-CG-HN"
 // }
 

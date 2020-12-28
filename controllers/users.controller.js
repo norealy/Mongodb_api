@@ -2,28 +2,17 @@
 require('dotenv').config();
 const User = require('../models/Users.model');
 const Token = require('../models/TokenModel');
+const encryption = require('../middleware/encryption');
 const jws = require('jws')
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
-const secretRefeshKey = process.env.REFRESH_TOKEN_KEY || "U2ltcGx5IGVudGVyIHlvdXIgZGF0YSB0aGVuIHB1c2ggdGhlIGVuY29kZSBidXR0b24u";
 const duration = parseInt(process.env.JWT_DURATION || 2400);
-const IV = process.env.IV || '1234567890123456'
-
-function encrypt(uid_token){
-	var cipher = crypto.Cipher('aes-256-gcm', Buffer.from(secretRefeshKey,'hex'),IV);
-	var token = cipher.update(uid_token, 'utf8', 'hex')
-	token += cipher.final('hex');
-	console.table({IV:IV.toString('hex'),encrypted: token})
-	return token;
-};
 
 exports.addUser = async (req, res) => {
 	if (req.body.username&&req.body.username) {
 		const {username,password} = req.body;
-		
 		try {
 			const salt = await bcrypt.genSalt(saltRounds);
 			const hashPassword = await bcrypt.hash(password, salt);
@@ -38,13 +27,11 @@ exports.addUser = async (req, res) => {
 				secret:secretAccessKey
 			});
 			const uid_token = uuid_V4();
-			// hmacRefresh.update(uid_token);
-			// const refresh_token = Buffer.from(hmacRefresh.digest('hex')).toString('base64');
-			const refresh_token = encrypt(uid_token)
+			const refresh_token = encryption.encryptoken(uid_token)
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
 			console.log("refresh_token",refresh_token)
-			res.status(201).send({user,access_Token:access_Token,refresh_token:refresh_token});
+			res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token});
 
 		} catch (error) {
 			console.log(error)

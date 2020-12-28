@@ -1,5 +1,5 @@
 const Orders = require('../models/Orders.model');
-
+const Products = require('../models/Product.model');
 exports.listOrders = async (req, res) => {
   let arrayOrders = await Orders.find();
   return res.send(arrayOrders);
@@ -16,6 +16,14 @@ exports.ordersID = async (req, res) => {
 
 exports.addOrders = async (req, res) => {
   if (req.body) {
+    const arrProduct = req.body.Orders_details;
+    let total_money = 0;
+    for (let i = 0; i < arrProduct.length; i++) {
+      const prodOrder = arrProduct[i];
+      const product = await Products.findOne({"_id":prodOrder.id_product});
+      total_money += product.price*prodOrder.count_product;
+    }
+    req.body.total_money = total_money;
     let orderr = req.body;
     let newOrders = new Orders(orderr);
     await newOrders.save(function (err, data) {

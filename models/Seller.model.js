@@ -7,6 +7,7 @@ const SellerSchema = new Schema({
   fullname :String,
   avatar :String,
   phone:String,
+  email:String,
   address:String,
  });
 

@@ -1,19 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser')
-const User = require('../models/Users.model');
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
+const Auth = require('../controllers/auth.controller');
+const Validation = require('../middleware/checktype');
 
 router.get('/login', async (req, res) => {
 	res.send("get login !");
 });
-router.post('/login', async (req, res) => {
-	res.send("POst login !");
+
+router.post('/login' , Validation.login ,Auth.login);
+
+router.get('/register', async (req, res) => {
+	res.send("get register !");
 });
+
+router.post('/register', Validation.register ,Auth.register);
+
+router.post('/refresh-token', async (req, res) => {
+	res.send("get logout !");
+});
+
 router.get('/logout', async (req, res) => {
 	res.send("get logout !");
 });
+
 router.post('/logout', async (req, res) => {
 	res.send("POst logout !");
 });
