@@ -3,15 +3,6 @@ const router = express.Router();
 const userCtrl = require('../controllers/users.controller');
 
 router.post('/add', userCtrl.addUser)
-// {
-// 	"username": "username1",
-// 	"password": "password1",
-// 	"fullname": "Nguyen Van Dat",
-// 	"avatar": "",
-// 	"phone": "0332302626",
-// "email":"xdatgd@gmailcom"
-// 	"address": "NKT-CG-HN"
-// }
 
 router.patch('/update/password', userCtrl.changePass)
 // {

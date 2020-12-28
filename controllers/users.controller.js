@@ -2,7 +2,7 @@
 require('dotenv').config();
 const User = require('../models/Users.model');
 const Token = require('../models/TokenModel');
-const encryption = require('../middleware/encryption');
+const Encryption = require('../middleware/encryption');
 const jws = require('jws')
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
@@ -27,17 +27,16 @@ exports.addUser = async (req, res) => {
 				secret:secretAccessKey
 			});
 			const uid_token = uuid_V4();
-			const refresh_token = encryption.encryptoken(uid_token)
+			const refresh_token = Encryption.encryptoken(uid_token)
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
 			console.log("refresh_token",refresh_token)
-			res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token});
+			res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
 
 		} catch (error) {
 			console.log(error)
-			res.send("Error")
+			res.send("Username exist")
 		}
-
 	}else{
 		res.send("Username or password empty !");
 	}
