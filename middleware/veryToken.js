@@ -25,8 +25,8 @@ module.exports.verifyRefreshToken = async function (req,res,next){
         const signature = accessToken.split('.')[2]
         console.log("signature : ",signature)
         const alg = "HS256";
-        // const verified = await jws.verify(accessToken,alg,secretAccessKey);
-        // console.log(verified);
+        const verified = await jws.verify(accessToken,alg,secretAccessKey);
+        console.log(verified);
         // lay ra user_uid
         
         let token_id = await decryption.decryptToken(refreshToken)
