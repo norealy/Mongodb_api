@@ -61,7 +61,7 @@ exports.validationOrder = async function(req,res,next){
             return;
         }
     } catch (error) {
-        res.send(`Validation :${error.details[0]['message']}`);
+        res.send(`${error}`);
         return;
     }
 }

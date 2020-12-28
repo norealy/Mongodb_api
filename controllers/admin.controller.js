@@ -23,7 +23,7 @@ exports.addAdmin = async (req, res) => {
 			const exp = iat + duration;
 			const access_Token =  jws.sign({
 				header: {alg:'HS256',typ:'JWT'},
-				payload: {uid: user._id, iat, exp},
+				payload: {uid: user._id,rules:"admin", iat, exp},
 				secret:secretAccessKey
 			});
 			const uid_token = uuid_V4();

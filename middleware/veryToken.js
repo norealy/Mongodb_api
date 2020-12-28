@@ -35,7 +35,6 @@ module.exports.verifyRefreshToken = async function (req,res,next){
             console.log("UID : ",uid)
             let token_id = decryption.decryptToken(refreshToken)
             console.log("TOKEN_ID : ",token_id)
-            // const tokenSuccess = await Tokens.findOne({"user_uid":uid}) // {"uid_token":token_id , "user_uid":uid}
             const tokenSuccess = await Tokens.findOne({"user_uid":uid,"uid_token":token_id}) 
             console.log("tokenSuccess:",tokenSuccess)
             if(tokenSuccess){
@@ -52,7 +51,6 @@ module.exports.verifyRefreshToken = async function (req,res,next){
         }
         return res.status(400).send("Access Token Denis ! !" );
     } catch (error) {
-        // console.log(error)
         return res.status(400).send('Invalid Token');
     }
 }
@@ -94,14 +92,14 @@ module.exports.verifyADminAccessToken =async function (req,res,next){
 // }
 // {
 //     "user": {
-//         "_id": "5fe9f08ba3d822183d34d4a9",
-//         "username": "usernamet4",
-//         "password": "$2b$10$6McSpnUWgrv085dwdv5czeV.pWvtdyCfQeV8aHvIL9cDKSTCJchzy",
-//         "email": "xdatgd223@gmail.com",
+//         "_id": "5fea3b116317af5eb1234e84",
+//         "username": "admin322",
+//         "password": "$2b$10$jsI.TIDv06Hdnzuwoc5JFu7qmi9qHgB7eOBsx3PPEGEZkUYfF6E22",
+//         "email": "xdatgd@gmail.com",
 //         "phone": "0332302626",
 //         "__v": 0
 //     },
-//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmU5ZjA4YmEzZDgyMjE4M2QzNGQ0YTkiLCJpYXQiOjE2MDkxNjY5ODcsImV4cCI6MTYwOTE3MDU4N30.H4guxMe6w9ZcBV6Ya13GBkw5PX7Bs2mfOVxrUXH0ZQg",
-//     "Refresh_Token": "d2225fa0d4dceaf4f0c7f0f82dbebe19a71bd7f2916cb70a8d805831420904eb2c96429a",
-//     "uid_token": "f6052294-07b3-4b51-8fdc-bc9ecfc05066"
+//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhM2IxMTYzMTdhZjVlYjEyMzRlODQiLCJpYXQiOjE2MDkxODYwNjUsImV4cCI6MTYwOTE4OTY2NX0.-KQ2YqFKp63Bdi__hcF2y7PwRyHxgc0nIoaiPHMBL2I",
+//     "Refresh_Token": "d22709f680daebf4f095f3f87cbebe48a318d7a8933ee10addd25464440a57e22d94169f",
+//     "uid_token": "f3fcf484-b4bb-4312-bd65-2150ee0942b3"
 // }
