@@ -11,12 +11,12 @@ const secretAccessKey = process.env.ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCB
 const duration = parseInt(process.env.JWT_DURATION || 2400);
 
 exports.addUser = async (req, res) => {
-	if (req.body.username&&req.body.username) {
-		const {username,password} = req.body;
+	if (req.body.username&&req.body.username&&req.body.email&&req.body.phone) {
+		const {username,password,email,phone} = req.body;
 		try {
 			const salt = await bcrypt.genSalt(saltRounds);
 			const hashPassword = await bcrypt.hash(password, salt);
-			const newuser = new User({username,password:hashPassword});
+			const newuser = new User({username,password:hashPassword,email:email,phone:phone});
 			const user = await newuser.save();
 			console.log("user",user);
 			const iat = Math.floor(new Date()/1000);
@@ -37,6 +37,7 @@ exports.addUser = async (req, res) => {
 			console.log(error)
 			res.send("Username exist")
 		}
+
 	}else{
 		res.send("Username or password empty !");
 	}

@@ -46,12 +46,12 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-	if (req.body.username&&req.body.username) {
-		const {username,password} = req.body;
+	if (req.body.username&&req.body.username&&req.body.email&&req.body.phone) {
+		const {username,password,email,phone} = req.body;
 		try {
 			const salt = await bcrypt.genSalt(saltRounds);
 			const hashPassword = await bcrypt.hash(password, salt);
-			const newuser = new User({username,password:hashPassword});
+			const newuser = new User({username,password:hashPassword,email:email,phone:phone});
 			const user = await newuser.save();
 			console.log("user",user);
 			const iat = Math.floor(new Date()/1000);

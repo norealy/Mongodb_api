@@ -26,38 +26,43 @@ module.exports.verifyRefreshToken = async function (req,res,next){
         console.log("signature : ",signature)
         const alg = "HS256";
         const verified = await jws.verify(accessToken,alg,secretAccessKey);
-        console.log(verified);
-        // lay ra user_uid
-        
-        let token_id = await decryption.decryptToken(refreshToken)
-        console.log(token_id);
-        // lay ra uid_token
-
-        const tokenSuccess = await Tokens.findOne({"uid_token":token_id}) //"user_uid":verified.user_uid,
+        console.log("verified : ",verified);
         // console.log(tokenSuccess);
-        
-        const iat = Math.floor(new Date()/1000);
-        const exp = iat + duration;
-        const access_Token =  jws.sign({
-            header: {alg:'HS256',typ:'JWT'},
-            payload: {uid: tokenSuccess.user_uid, iat, exp},
-            secret:secretAccessKey
-        });
-        return res.status(200).send({New_AccessToken:access_Token});
+        if(verified){
+            const jwsData = jws.decode(accessToken)
+            console.log("UID : ",jwsData.payload['uid'])
+            let token_id = decryption.decryptToken(refreshToken)
+            console.log("TOKEN_ID : ",token_id)
+            const tokenSuccess = await Tokens.findOne({"uid_token":token_id}) // {"uid_token":token_id,"user_uid":jwsData.payload['uid']}
+            console.log(tokenSuccess)
+            if(tokenSuccess){
+                const iat = Math.floor(new Date()/1000);
+                const exp = iat + duration;
+                const access_Token =  jws.sign({
+                    header: {alg:'HS256',typ:'JWT'},
+                    payload: {uid: jwsData.payload['uid'], iat, exp},
+                    secret:secretAccessKey
+                });
+                return res.status(200).send( {New_AccsessToken:access_Token} );
+            }
+            return res.status(400).send( "Access Token Denis ! !" );
+        }
+        return res.status(400).send("Access Token Denis ! !" );
     } catch (error) {
         console.log(error)
         return res.status(400).send('Invalid Token');
     }
 }
-
 // {
 //     "user": {
-//         "_id": "5fe9582a2d6b5e1309aa7c30",
-//         "username": "usernamet66",
-//         "password": "$2b$10$dm6GhCQ5QrLFF6XcyqHYue91wfL3BwphBLwOSQeuDMuG4Ply1dK1m",
+//         "_id": "5fe9e976f5c3232e17fcbd77",
+//         "username": "usernamet1",
+//         "password": "$2b$10$8xzjkMO7zDUt/YCuhq/4K.JvJ1/Fo8sLW1K7FbgBqDXmviGV6rgAW",
+//         "email": "xdatgd223@gmail.com",
+//         "phone": "0332302626",
 //         "__v": 0
 //     },
-//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmU5NTgyYTJkNmI1ZTEzMDlhYTdjMzAiLCJpYXQiOjE2MDkxMjc5NzgsImV4cCI6MTYwOTEzMTU3OH0.Nl0fzb9Swmqm-gO5QJdpBxz0_SRCSu8qGGJ9kVi4fWA",
-//     "Refresh_Token": "d7205facd7dae1a3f0c1ffff29bebe4af04cd7ab916bb70ad7865930100c06ba2d944dcf",
-//     "uid_token": "c409142c-68e7-41bf-afcc-8e8d1caa429c"
+//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmU5ZTk3NmY1YzMyMzJlMTdmY2JkNzciLCJpYXQiOjE2MDkxNjUxNzQsImV4cCI6MTYwOTE2ODc3NH0.ZvFnfYGTQpWdeE0_GqA3QaCuV2zVK9gscLAdEh5WumM",
+//     "Refresh_Token": "842759f1dfd6eaa3f096a5fc28bebe4ff34bd7f3c438ec0adf805830180b04ba2d954d9a",
+//     "uid_token": "036d989c-abf6-44aa-9308-0c9d9dca4396"
 // }
