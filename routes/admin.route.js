@@ -7,13 +7,13 @@ const Validation = require('../middleware/checktype');
 
 router.post('/add', Validation.register , adminCtrl.addAdmin)
 
-router.patch('/update/password', adminCtrl.changePass)
+router.patch('/change-password',Validation.ChangePassword , adminCtrl.changePass)
 // {
 //     "id":"5fe4f1796b25df78cdcf26a8",
 //     "password": "password2222222"
 // }
 
-router.put('/update/info', adminCtrl.changeInfo)
+router.put('/update/info',Validation.UpdateInfo, adminCtrl.changeInfo)
 // {
 // 	"id": "5fe4f1796b25df78cdcf26a8",
 // 	"fullname": "Nguyen Van Datttt",
@@ -25,11 +25,11 @@ router.get('/list',adminCtrl.listUsers)
 
 router.get('/list/:id', adminCtrl.userID)
 
-router.delete('/delete/id', adminCtrl.deleteByID)
+router.delete('/delete/id', Validation.DeleteIdUser,adminCtrl.deleteByID)
 // {
 // 	"id": "5fe4f1926b25df78cdcf26ac"
 // }
-router.delete('/delete/username', adminCtrl.deleteByUsername)
+router.delete('/delete/username',Validation.DeleteUsername, adminCtrl.deleteByUsername)
 // {
 // 	"username": "username5"
 // }

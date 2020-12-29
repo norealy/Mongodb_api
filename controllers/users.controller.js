@@ -44,9 +44,9 @@ exports.addUser = async (req, res) => {
 };
 
 exports.changePass = async (req, res) => {
-	if (req.body.password) {
+	if (req.body.password && req.body.newPassword) {
 		let user = req.body;
-		await User.findOneAndUpdate({ _id: user.id }, { password: user.password }, { new: true }, function (err, data) {
+		await User.findOneAndUpdate({ _id: user.id ,password: password}, { password: user.req.body.newPassword }, { new: true }, function (err, data) {
 			if (err) return console.error(err);
 			return res.send(data);
 		});
@@ -54,6 +54,20 @@ exports.changePass = async (req, res) => {
 		return res.send("Change password fail !");
 	}
 };
+
+exports.forgetPassword = async (req, res) => {
+	if (req.body.newPassword) {
+		let user = req.body;
+		await User.findOneAndUpdate({ _id: user.id}, { password: user.req.body.newPassword }, { new: true }, function (err, data) {
+			if (err) return console.error(err);
+			return res.send(data);
+		});
+	}else{
+		return res.send("Change password fail !");
+	}
+};
+
+
 exports.changeInfo = async (req, res) => {
 	if(req.body.id){
 		let user = req.body;

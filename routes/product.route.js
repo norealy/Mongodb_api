@@ -4,7 +4,7 @@ const productCtrl = require('../controllers/product.controller');
 const Validation = require('../middleware/checktype');
 const veryToken = require('../middleware/veryToken');
 
-router.post('/add', veryToken.verifyAccessToken ,Validation.validationProduct ,productCtrl.addProduct)
+router.post('/add', veryToken.verifyAccessToken ,Validation.addProduct ,productCtrl.addProduct)
 // {
 //     "id_seller":"5fe91d9e893b5d1db88ae1d6",
 //     "image":"x",
@@ -13,7 +13,7 @@ router.post('/add', veryToken.verifyAccessToken ,Validation.validationProduct ,p
 //     "count_product":12,
 //     "Categories":{"name":"Điện thoại"}
 // }
-router.put('/update',veryToken.verifyAccessToken ,productCtrl.changeInfo)
+router.put('/update',veryToken.verifyAccessToken ,Validation.UpdateProduct,productCtrl.changeInfo)
 
 router.get('/list', productCtrl.listProducts)
 

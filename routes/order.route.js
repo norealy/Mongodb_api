@@ -4,7 +4,7 @@ const ordersCtrl = require('../controllers/orders.controller');
 const Validation = require('../middleware/checktype');
 const veryToken = require('../middleware/veryToken');
 
-router.post('/add',veryToken.verifyAccessToken,Validation.validationOrder,ordersCtrl.addOrders)
+router.post('/add',veryToken.verifyAccessToken,Validation.addOrder,ordersCtrl.addOrders)
 // {
 //     "id_user":"5fe91d9e893b5d1db88ae1d6",
 //     "Orders_details":[{
@@ -30,8 +30,8 @@ router.get('/list/:id', ordersCtrl.ordersID)
 
 router.delete('/delete',veryToken.verifyAccessToken,ordersCtrl.deleteByID)
 // {
-// 	"id": "5fe4f1926b25df78cdcf26ac",
-  
+// 	"id_order": "5fe4f1926b25df78cdcf26ac",
+// 	"id_user": "5fe4f1926b25df78cdcf26ac",
 // }
 
 module.exports = router;

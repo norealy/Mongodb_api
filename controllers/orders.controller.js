@@ -55,8 +55,9 @@ exports.EditOrder = async (req, res) => {
 
 
 exports.deleteByID = async (req, res) => {
-  if (req.body.id) {
-    await Orders.remove({ "_id": req.body.id }, function (err, data) {
+  if (req.body.id_order&&req.body.id_user) {
+
+    await Orders.remove({ "_id": req.body.id_order,id_user:req.body.id_user }, function (err, data) {
       if (err) return console.error(err);
       return res.send(data);
     });

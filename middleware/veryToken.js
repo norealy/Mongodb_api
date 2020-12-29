@@ -2,27 +2,39 @@ require('dotenv').config();
 const decryption = require('./encryption');
 const Tokens = require('../models/TokenModel');
 const AdminModel = require('../models/Admin.model');
-const Users = require('../models/Users.model');
 const jws = require('jws');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWT_DURATION || 2400);
+const durationRefresh = parseInt(process.env.JWT_DURATION || 2400);
 const alg = "HS256";
 module.exports.verifyAccessToken = async function (req,res,next){
     const accessToken = req.header('Access_Token');
     console.log(accessToken)
-    if(!accessToken) return res.status(401).send('Access Denis !')
+    if(!accessToken) return res.status(401).send('Access token Denis !')
     try {
         const verified = await jws.verify(accessToken,alg,secretAccessKey);
-        if(verified) return next();
-        return res.status(400).send('Invalid Token')
+        if(verified){
+            const jwsData = jws.decode(accessToken);
+            const rules = jwsData.payload.rules;
+            console.log("rules : ",rules);
+            console.log("Path: ",req.path)
+            return next();
+        } 
+        return res.status(401).send({
+            code: "E_INVALID_JWT_ACCESS_TOKEN",
+            message: `Invalid access token ${accessToken}`
+        });
     } catch (error) {
-        return res.status(400).send('Invalid Token')
+        return res.status(401).send('Invalid Token')
     }
 }
 
 module.exports.verifyRefreshToken = async function (req,res,next){
     const refreshToken = req.header('Refresh_Token');
-    if(!refreshToken) return res.status(401).send('Refresh Denis !')
+    if(!refreshToken) return res.status(401).send({
+        code: "E_MISSING_AUTH_HEADER",
+        message: "Cannot parse or read Basic auth header"
+    });
     try {
         const accessToken = req.header('Access_Token');
         const signature = accessToken.split('.')[2]
@@ -35,23 +47,40 @@ module.exports.verifyRefreshToken = async function (req,res,next){
             console.log("UID : ",uid)
             let token_id = decryption.decryptToken(refreshToken)
             console.log("TOKEN_ID : ",token_id)
-            const tokenSuccess = await Tokens.findOne({"user_uid":uid,"uid_token":token_id}) 
+            const tokenSuccess = await Tokens.findOne({"user_uid":uid,"uid_token":token_id,"is_revoke":false})
             console.log("tokenSuccess:",tokenSuccess)
-            if(tokenSuccess){
-                const iat = Math.floor(new Date()/1000);
-                const exp = iat + duration;
-                const access_Token =  jws.sign({
-                    header: {alg:'HS256',typ:'JWT'},
-                    payload: {uid: uid, iat, exp},
-                    secret:secretAccessKey
+            if(!tokenSuccess){
+                return res.status(401).send({
+                    code: "E_INVALID_JWT_REFRESH_TOKEN",
+                    message: `Invalid refresh token ${refreshToken}`
                 });
-                return res.status(200).send( {New_AccsessToken:access_Token} );
             }
-            return res.status(400).send( "Token Denis ! !" );
+
+            const now = Math.floor(new Date() / 1000);
+            if (now - tokenSuccess.created_at >= durationRefresh) {
+                tokenSuccess.is_revoke = true;
+                await tokenSuccess.save();
+                return res.status(401)
+                    .send({
+                        code: "E_INVALID_JWT_REFRESH_TOKEN",
+                        message: `Invalid refresh token ${refreshToken}`
+                    });
+            }
+            const exp = now + duration;
+            const access_Token =  jws.sign({
+                header: {alg:'HS256',typ:'JWT'},
+                payload: {uid: uid, iat:now, exp},
+                secret:secretAccessKey
+            });
+            return res.status(200).send( {New_AccsessToken:access_Token} );
+            
         }
-        return res.status(400).send("Access Token Denis ! !" );
+        return res.status(401).send({
+            code: "E_INVALID_JWT_TOKEN",
+            message: "The Jwt token is invalid",
+        });
     } catch (error) {
-        return res.status(400).send('Invalid Token');
+        return res.status(401).send('Invalid Token');
     }
 }
 
@@ -68,15 +97,16 @@ module.exports.verifyADminAccessToken =async function (req,res,next){
             console.log(uid)
             const admin = await AdminModel.findOne({"_id":uid})
             if(admin===null){
-                return res.status(400).send('Permission denied !')
+                return res.status(401).send('Permission denied !')
             }
             return next();
         }
-        return res.status(400).send('Invalid Token')
+        return res.status(401).send('Invalid Token')
     } catch (error) {
-        return res.status(400).send({"error:":error})
+        return res.status(401).send({"error:":error})
     }
 }
+
 // {
 //     "Amin": {
 //         "_id": "5fea0949682b303a7bf1c697",
