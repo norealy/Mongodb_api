@@ -18,3 +18,4 @@ exports.decryptToken = function (tokenString) {
     let token_id = decipher.update(tokenString, 'hex', 'utf8');
     return token_id;
 }
+

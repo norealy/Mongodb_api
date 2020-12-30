@@ -56,6 +56,7 @@ const  updateProductSchema = Joi.object({
         .required(),
     id_seller: Joi.string()
         .required(),
+    image: Joi.string(),
     price: Joi.number().min(1000).message("Giá có định dạng number , phải lớn hơn 1000"),
     description: Joi.string(),
     count_product: Joi.number().min(1).message("Số lượng có định dạng number , phải lớn hơn 1"),

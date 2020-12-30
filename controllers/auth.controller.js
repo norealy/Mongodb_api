@@ -41,7 +41,7 @@ exports.adminLogin = async (req, res) => {
 				const exp = iat + duration;
 				const access_Token = jws.sign({
 					header: { alg: 'HS256', typ: 'JWT' },
-					payload: { uid: uid,rules:"admin", iat, exp },
+					payload: { uid: uid,roles:"admin", iat, exp },
 					secret: secretAccessKey,
 				});
 				console.log('Access_Token', access_Token);
@@ -67,8 +67,7 @@ exports.login = async (req, res) => {
 						payload: { uid: uid, iat, exp },
 						secret: secretAccessKey,
 					});
-					console.log('Access_Token', access_Token);
-					return res.send({ access_Token: access_Token });
+					return res.send({ Access_Token: access_Token });
 				}else{
 					return res.send("Wrong username or password");
 				}

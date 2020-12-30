@@ -10,9 +10,9 @@ function Routes(app) {
         res.send('Client run !');
     });
     app.use('/auth', Auth);
-    app.use('/users',veryToken.verifyAccessToken, User);
-    app.use('/orders',veryToken.verifyAccessToken ,Order);
-    app.use('/manager-admin',veryToken.verifyADminAccessToken, Admin);
+    app.use('/users', User);
+    app.use('/orders' ,Order);
+    app.use('/manager-admin', Admin);
     app.use('/products', Products);
     app.get('/refresh-token', veryToken.verifyRefreshToken);
 }

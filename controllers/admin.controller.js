@@ -3,12 +3,19 @@ require('dotenv').config();
 const Admin = require('../models/Admin.model');
 const Token = require('../models/TokenModel');
 const Encryption = require('../middleware/encryption');
-const jws = require('jws')
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
-const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
-const secretAccessKey = process.env.ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
-const duration = parseInt(process.env.JWT_DURATION || 2400);
+
+async function convertPassword(password) {
+	const salt = await bcrypt.genSalt(saltRounds);
+	const hashPassword = await bcrypt.hash(password, salt);
+	return hashPassword;
+}
+async function checkPass(password,hashpass) {
+	const check = await bcrypt.compare(password, hashpass);
+	console.log("Check Password :",check)
+	return check;
+}
 
 exports.addAdmin = async (req, res) => {
 	if (req.body.username&&req.body.username&&req.body.email&&req.body.phone) {
@@ -20,39 +27,45 @@ exports.addAdmin = async (req, res) => {
 			const user = await newuser.save();
 			console.log("Admin",user);
 			const iat = Math.floor(new Date()/1000);
-			const exp = iat + duration;
-			const access_Token =  jws.sign({
-				header: {alg:'HS256',typ:'JWT'},
-				payload: {uid: user._id,rules:"admin", iat, exp},
-				secret:secretAccessKey
-			});
 			const uid_token = uuid_V4();
 			const refresh_token = Encryption.encryptoken(uid_token)
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
 			console.log("refresh_token",refresh_token)
-			return res.status(201).send({Amin:user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
-
+			res.status(201).send({Amin:user,Refresh_Token:refresh_token,uid_token:uid_token});
+			return;
 		} catch (error) {
-			return res.send("Username exist")
+			res.send("Username exist !");
+			return;
 		}
-
 	}else{
-		return res.send("Username or password empty !");
+		res.send("Username or password empty !");
+		return;
 	}
 };
 
 exports.changePass = async (req, res) => {
-	if (req.body.password) {
-		let user = req.body;
-		await Admin.findOneAndUpdate({ _id: user.id }, { password: user.password }, { new: true }, function (err, data) {
-			if (err) return console.error(err);
-			return res.send(data);
-		});
+	if (req.body.id && req.body.password && req.body.newPassword) {
+		let {id,password,newPassword} = req.body;
+		const userT = await Admin.findOne({ "_id": id });
+		const hashPassword = await convertPassword(newPassword);
+		const check = await checkPass(password,userT.password);
+		if(check){
+			await Admin.updateOne({ _id: id}, {
+			$set: 
+				{ password: hashPassword}
+			}, function (err, data) {
+				if (err) return res.send("Change password error :",err);
+				return res.send("Change password ok !");
+			});
+		}else{
+			return res.send("Wrong password !");
+		}
 	}else{
 		return res.send("Change password fail !");
 	}
 };
+
 exports.changeInfo = async (req, res) => {
 	if(req.body.id){
 		let user = req.body;

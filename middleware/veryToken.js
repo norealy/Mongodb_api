@@ -1,12 +1,12 @@
 require('dotenv').config();
 const decryption = require('./encryption');
 const Tokens = require('../models/TokenModel');
-const AdminModel = require('../models/Admin.model');
 const jws = require('jws');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWT_DURATION || 2400);
 const durationRefresh = parseInt(process.env.JWT_DURATION || 2400);
-const alg = "HS256";
+const alg = process.env.ALG ||"HS256";
+
 module.exports.verifyAccessToken = async function (req,res,next){
     const accessToken = req.header('Access_Token');
     console.log(accessToken)
@@ -14,10 +14,6 @@ module.exports.verifyAccessToken = async function (req,res,next){
     try {
         const verified = await jws.verify(accessToken,alg,secretAccessKey);
         if(verified){
-            const jwsData = jws.decode(accessToken);
-            const rules = jwsData.payload.rules;
-            console.log("rules : ",rules);
-            console.log("Path: ",req.path)
             return next();
         } 
         return res.status(401).send({
@@ -29,7 +25,7 @@ module.exports.verifyAccessToken = async function (req,res,next){
     }
 }
 
-module.exports.verifyRefreshToken = async function (req,res,next){
+module.exports.verifyRefreshToken = async function (req,res){
     const refreshToken = req.header('Refresh_Token');
     if(!refreshToken) return res.status(401).send({
         code: "E_MISSING_AUTH_HEADER",
@@ -84,41 +80,18 @@ module.exports.verifyRefreshToken = async function (req,res,next){
     }
 }
 
-module.exports.verifyADminAccessToken =async function (req,res,next){
-    const accessToken = req.header('Access_Token');
-    console.log(accessToken)
-    if(!accessToken) return res.status(401).send('Access Denis !')
-    try {
-        const verified = jws.verify(accessToken,alg,secretAccessKey);
-        console.log("verified : ",verified);
-        if(verified){
-            const jwsData = jws.decode(accessToken)
-            const uid = jwsData.payload.uid;
-            console.log(uid)
-            const admin = await AdminModel.findOne({"_id":uid})
-            if(admin===null){
-                return res.status(401).send('Permission denied !')
-            }
-            return next();
-        }
-        return res.status(401).send('Invalid Token')
-    } catch (error) {
-        return res.status(401).send({"error:":error})
-    }
-}
 
 // {
 //     "Amin": {
-//         "_id": "5fea0949682b303a7bf1c697",
-//         "username": "admin3288",
-//         "password": "$2b$10$7Pp0Ei6yRCjFyYDqVGXxvOotpDXwNVTnKpC57K3oiGelQRAngLZm6",
-//         "email": "admin@gmail.com",
-//         "phone": "0332302626",
+//         "_id": "5feceb88fba6023cc59684c3",
+//         "username": "admin2",
+//         "password": "$2b$10$rE7jT6.6SyL5SlUUy0s4DefnZnJfDkuDp4nn4DxmISo43IKte8ay.",
+//         "email": "xdatgd@gmail.com",
+//         "phone": "0332302222",
 //         "__v": 0
 //     },
-//     "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhMDk0OTY4MmIzMDNhN2JmMWM2OTciLCJpYXQiOjE2MDkxNzMzMjEsImV4cCI6MTYwOTE3NjkyMX0.Uu88EEbHHSGjJDTdYkNv1Zzs50Q4MPK3nquaIVYTpBo",
-//     "Refresh_Token": "d07609a4d2dee6a3f0cefffb2fbebe1ff11cd7abc06bb20aded65366140c5fe22b9f1294",
-//     "uid_token": "dbf1405c-98a1-4dc6-a7cf-15225c8929f8"
+//     "Refresh_Token": "837559a485dde0f6f0c5f2ac2fbebe42f61bd7f3ce6bec0ad8d6503618095eef7d9e1795",
+//     "uid_token": "7a61c336-2561-49d1-99c8-751b9f94d8c9"
 // }
 // {
 //     "user": {
@@ -133,3 +106,11 @@ module.exports.verifyADminAccessToken =async function (req,res,next){
 //     "Refresh_Token": "d22709f680daebf4f095f3f87cbebe48a318d7a8933ee10addd25464440a57e22d94169f",
 //     "uid_token": "f3fcf484-b4bb-4312-bd65-2150ee0942b3"
 // }
+
+// user
+// "Refresh_Token": "d22709f680daebf4f095f3f87cbebe48a318d7a8933ee10addd25464440a57e22d94169f"
+// "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhM2IxMTYzMTdhZjVlYjEyMzRlODQiLCJpYXQiOjE2MDkxODYwNjUsImV4cCI6MTYwOTE4OTY2NX0.-KQ2YqFKp63Bdi__hcF2y7PwRyHxgc0nIoaiPHMBL2I"
+
+// Admin 
+// "Refresh_Token": "837559a485dde0f6f0c5f2ac2fbebe42f61bd7f3ce6bec0ad8d6503618095eef7d9e1795"
+// "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5MzYyMzYwLCJleHAiOjE2MDkzNjU5NjB9.Y0yKOVIpjgOtAUELT1bcHESPm72RgvHWdkdiaEHaInM"

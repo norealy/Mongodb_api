@@ -1,0 +1,15 @@
+Account : 
+App :   Client _id 
+        Client secret
+
+    ---------------------
+
+    Login   header: ClientId,Role, redirect
+
+    => Submit :    call redirect
+
+    URL : redirect + idToken 
+
+
+    Post IDToken + secret => Api get token Microsoft    return Access_Token and Refresh_Token;
+

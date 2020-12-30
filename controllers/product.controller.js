@@ -6,26 +6,33 @@ exports.listProducts = async (req, res) => {
 
 exports.ProductID = async (req, res) => {
 	if (req.params.id) {
-		let Product = await Product.findOne({ _id: req.params.id });
-		return res.send(Product);
+		let pproduct = await Product.findById(req.params.id);
+		return res.send(pproduct);
 	} else {
 		return res.send('Not found !');
 	}
 };
 exports.Product_byCategories = async (req, res) => {
 	if (req.body.category_name) {
-		
-		return res.send('ok !');
+		try {
+			let newProduct = await Product.find({'Categories.name':req.body.category_name});
+			return res.send(newProduct);
+		} catch (error) {
+			return res.send(error);
+		}
 	} else {
 		return res.send('Not found !');
 	}
 };
 exports.Product_seller = async (req, res) => {
-	if (req.params.id_seller) {
-		let Products = await Product.find({ id_seller: req.params.id_seller });
-		return res.send(Products);
+	console.log(req.body)
+	if (req.body.id_seller) {
+		console.log("ID SELLER",req.body.id_seller)
+		const pproduct = await Product.find({id_seller: req.body.id_seller});
+		console.log(pproduct)
+		return res.status(200).send(pproduct);
 	} else {
-		return res.send('Not found !');
+		return res.status(401).send('Not found !');
 	}
 };
 
@@ -95,6 +102,6 @@ exports.deleteByID = async (req, res) => {
 			return res.send(data);
 		});
 	} else {
-		req.send('Not remove id empty !');
+		return res.send('Not remove id empty !');
 	}
 };

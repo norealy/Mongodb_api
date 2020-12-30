@@ -7,9 +7,9 @@ const productSchema = new Schema({
     price :Number,
     description :String,
     count_product:Number,
-    Categories:[{
+    Categories:{
       name:String,
-    }],
+    },
  });
 
 const Products = mongoose.model("Products", productSchema);

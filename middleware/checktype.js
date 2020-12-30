@@ -87,7 +87,7 @@ exports.ForgetPassword = async function(req,res,next){
             console.log(result)
             return next();
         }else{
-            res.send(`Body must have id_user, Orders_details [{id_product,count_product}]  `);
+            res.send(`Body must have id_user, newPassword  `);
             return;
         }
     } catch (error) {
@@ -103,7 +103,7 @@ exports.UpdateInfo = async function(req,res,next){
             console.log(result)
             return next();
         }else{
-            res.send(`Body must have id_user, Orders_details [{id_product,count_product}]  `);
+            res.send(`Body must have id_user, info  `);
             return;
         }
     } catch (error) {
@@ -119,7 +119,7 @@ exports.DeleteIdUser = async function(req,res,next){
             console.log(result)
             return next();
         }else{
-            res.send(`Body must have id_user, Orders_details [{id_product,count_product}]  `);
+            res.send(`Body must have id_user  `);
             return;
         }
     } catch (error) {
@@ -135,7 +135,7 @@ exports.DeleteUsername = async function(req,res,next){
             console.log(result)
             return next();
         }else{
-            res.send(`Body must have id_user, Orders_details [{id_product,count_product}]  `);
+            res.send(`Body must have username `);
             return;
         }
     } catch (error) {
@@ -151,7 +151,7 @@ exports.UpdateProduct = async function(req,res,next){
             console.log(result)
             return next();
         }else{
-            res.send(`Body must have id_user, Orders_details [{id_product,count_product}]  `);
+            res.send(`Body must have id_seller ,...  `);
             return;
         }
     } catch (error) {
