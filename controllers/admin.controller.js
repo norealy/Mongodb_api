@@ -5,7 +5,10 @@ const Token = require('../models/TokenModel');
 const Encryption = require('../middleware/encryption');
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
-
+/**
+ * 
+ * @param {*} password 
+ */
 async function convertPassword(password) {
 	const salt = await bcrypt.genSalt(saltRounds);
 	const hashPassword = await bcrypt.hash(password, salt);
