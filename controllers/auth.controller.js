@@ -10,7 +10,12 @@ const bcrypt = require('bcrypt');
 const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWT_DURATION || 2400);
-
+const refreshDuration = parseInt(process.env.JWT_DURATION || 2400);
+/**
+ * 
+ * @param {string} username 
+ * @param {string} password 
+ */
 async function checkLogin(username, password) {
 	try {
 		const user = await User.findOne({ "username": username });
@@ -21,6 +26,11 @@ async function checkLogin(username, password) {
 		return null;
 	}
 }
+/**
+ * 
+ * @param {string} username 
+ * @param {string} password 
+ */
 async function AdminLogin(username, password) {
 	try {
 		const user = await Admin.findOne({ "username": username });
@@ -44,6 +54,13 @@ exports.adminLogin = async (req, res) => {
 					payload: { uid: uid,roles:"admin", iat, exp },
 					secret: secretAccessKey,
 				});
+				const expCookie = refreshDuration + Date.now();
+				res.cookie("Refresh-token", refreshToken, {
+					maxAge: expCookie,
+					httpOnly: true,
+					// secure: true,
+					sameSite: "Strict",
+				});
 				console.log('Access_Token', access_Token);
 				return res.send({ access_Token: access_Token });
 			}else{
@@ -57,6 +74,7 @@ exports.adminLogin = async (req, res) => {
 exports.login = async (req, res) => {
 		try {
 			const { username, password } = req.body;
+			console.log(req.body)
 			if(username&&password){
 				const uid = await checkLogin(username, password);
 				if (uid) {
@@ -66,6 +84,14 @@ exports.login = async (req, res) => {
 						header: { alg: 'HS256', typ: 'JWT' },
 						payload: { uid: uid, iat, exp },
 						secret: secretAccessKey,
+					});
+					const uid_token = uuid_V4();
+					const refreshToken = Encryption.encryptoken(uid_token)
+					const expCookie = refreshDuration + Date.now();
+					res.cookie("Refresh-token", refreshToken, {
+						maxAge: expCookie,
+						httpOnly: true,
+						sameSite: "Strict",
 					});
 					return res.send({ Access_Token: access_Token });
 				}else{
@@ -94,6 +120,12 @@ exports.register = async (req, res) => {
 			});
 			const uid_token = uuid_V4();
 			const refresh_token = Encryption.encryptoken(uid_token)
+			const expCookie = refreshDuration + Date.now();
+			res.cookie("Refresh-token", refresh_token, {
+				maxAge: expCookie,
+				httpOnly: true,
+				sameSite: "Strict",
+			});
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
 			return res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});

@@ -4,7 +4,7 @@ const Tokens = require('../models/TokenModel');
 const jws = require('jws');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWT_DURATION || 2400);
-const durationRefresh = parseInt(process.env.JWT_DURATION || 2400);
+const durationRefresh = parseInt(process.env.REFRESH_DUCATION || 31536000);
 const alg = process.env.ALG ||"HS256";
 
 module.exports.verifyAccessToken = async function (req,res,next){
@@ -26,11 +26,15 @@ module.exports.verifyAccessToken = async function (req,res,next){
 }
 
 module.exports.verifyRefreshToken = async function (req,res){
-    const refreshToken = req.header('Refresh_Token');
-    if(!refreshToken) return res.status(401).send({
-        code: "E_MISSING_AUTH_HEADER",
-        message: "Cannot parse or read Basic auth header"
-    });
+    let {refreshToken} = req.body;
+    if(!refreshToken)
+        refreshToken = req.cookies['Refresh-token'];
+    if(!refreshToken)
+        res.status(401)
+            .send({
+                code: "E_INVALID_JWT_REFRESH_TOKEN",
+                message: `Invalid refresh token ${refreshToken}`
+            });
     try {
         const accessToken = req.header('Access_Token');
         const signature = accessToken.split('.')[2]

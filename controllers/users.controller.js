@@ -9,11 +9,20 @@ const bcrypt = require('bcrypt');
 const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
 const duration = parseInt(process.env.JWT_DURATION || 2400);
+/**
+ * 
+ * @param {string} password 
+ */
 async function convertPassword(password) {
 	const salt = await bcrypt.genSalt(saltRounds);
 	const hashPassword = await bcrypt.hash(password, salt);
 	return hashPassword;
 }
+/**
+ * 
+ * @param {string} password 
+ * @param {string} hashpass 
+ */
 async function checkPass(password,hashpass) {
 	const check = await bcrypt.compare(password, hashpass);
 	console.log("Check Password :",check)

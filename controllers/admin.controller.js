@@ -7,13 +7,19 @@ const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
 /**
  * 
- * @param {*} password 
+ * @param {string} password 
  */
 async function convertPassword(password) {
 	const salt = await bcrypt.genSalt(saltRounds);
 	const hashPassword = await bcrypt.hash(password, salt);
 	return hashPassword;
 }
+/**
+ * 
+ * @param {string} password 
+ * @param {string} hashpass - password Hash by bcrypt
+ * @returns true
+ */
 async function checkPass(password,hashpass) {
 	const check = await bcrypt.compare(password, hashpass);
 	console.log("Check Password :",check)

@@ -5,9 +5,11 @@ const Products = require ('./product.route');
 const Admin = require ('./admin.route');
 const veryToken = require('../middleware/veryToken');
 
-function Routes(app) {
-    app.get('/', (req, res) => {
-        res.send('Client run !');
+
+function Routes(app,pathRoot) {
+    app.get('/auth/login', (req, res) => {
+        const file = pathRoot + '/views/login.html';
+        res.sendFile(file)
     });
     app.use('/auth', Auth);
     app.use('/users', User);
