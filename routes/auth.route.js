@@ -26,6 +26,10 @@ router.get('/login-microsoft',Auth.redirectMicrosoft)
 
 router.get('/microsoft',Auth.getDataUser)
 
+router.get('/login-google',Auth.getRidirectGG)
+
+router.get('/google',Auth.getDataUser_GG)
+
 router.post('/login' , Validation.login ,Auth.login);
 
 router.post('/admin/login', Validation.login , Auth.adminLogin)
