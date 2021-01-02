@@ -6,10 +6,9 @@ const Admin = require ('./admin.route');
 const veryToken = require('../middleware/veryToken');
 
 
-function Routes(app,pathRoot) {
-    app.get('/auth/login', (req, res) => {
-        const file = pathRoot + '/views/login.html';
-        res.sendFile(file)
+function Routes(app) {
+    app.get('/', (req, res) => {
+        res.send("Home : "+__dirname)
     });
     app.use('/auth', Auth);
     app.use('/users', User);

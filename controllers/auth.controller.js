@@ -4,6 +4,8 @@ const User = require('../models/Users.model');
 const Admin = require('../models/Admin.model');
 const Encryption = require('../middleware/encryption');
 const Token = require('../models/TokenModel');
+const qs = require('qs');
+const axios = require('axios');
 const jws = require('jws');
 const { v4: uuid_V4 } = require('uuid');
 const bcrypt = require('bcrypt');
@@ -11,6 +13,14 @@ const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWT_DURATION || 2400);
 const refreshDuration = parseInt(process.env.JWT_DURATION || 2400);
+
+const processState = process.env.STATE || 'RANDOMID@@--123'
+const state = Buffer.from(processState).toString('base64')
+const redirect_url = "http://localhost:4000/auth/microsoft";
+const scope = "user.read";
+const client_id = process.env.CLIENT_AZURE_ID;
+const client_secret = process.env.CLIENT_AZURE_SECRET;
+
 /**
  * 
  * @param {string} username 
@@ -41,6 +51,66 @@ async function AdminLogin(username, password) {
 		return null;
 	}
 }
+exports.redirectMicrosoft = (req,res)=>{
+	console.log("**********Login Microsoft**********")
+	console.log(state)
+	const urlRequestAuthor = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_url}&response_mode=query&scope=${scope}&state=${state}`;
+	return res.redirect(urlRequestAuthor)
+};
+exports.getDataUser = (req,res)=>{
+	const code = req.query.code
+	console.log("code: ", code)
+	const url_getToken = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
+	console.log("url_getToken : ", typeof url_getToken)
+	const data = {
+	  client_id: client_id,
+	  scope,
+	  code,
+	  redirect_uri: redirect_url,
+	  grant_type: "authorization_code",
+	  client_secret,
+	  response_mode: "form_post"
+	};
+	const options = {
+	  method: 'POST',
+	  headers: { 'content-type': 'application/x-www-form-urlencoded' },
+	  data: qs.stringify(data),
+	  url: url_getToken,
+	};
+	try {
+	  axios(options)
+		.then(function (response) {
+		  console.log("2.Data",response.data);
+		  const options = {
+			method: 'GET',
+			headers: { 'Authorization': `Bearer ${response.data.access_token}` },
+			url: "https://graph.microsoft.com/v1.0/me",
+			};
+			try {
+			  axios(options)
+				.then(function (response) {
+				  console.log("2.Data User ",response.data);
+				  res.send({"User data ": response.data})
+				})
+				.catch(function (error) {
+				  console.log("error");
+				  res.send("Error get data !!!")
+				});
+			} catch (error) {
+			  console.log("POST FORM DATA Eroor");
+			  return res.status(401).send(error)
+		  }
+		})
+		.catch(function (error) {
+		  console.log("error");
+		});
+	} catch (error) {
+	  console.log("POST FORM DATA Eroor");
+	  return res.status(401).send(error)
+	}
+};
+
+
 exports.adminLogin = async (req, res) => {
 	try {
 		const { username, password } = req.body;

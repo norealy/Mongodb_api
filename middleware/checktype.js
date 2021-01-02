@@ -17,7 +17,7 @@ exports.login = async function(req,res,next){
 }
 exports.register = async function(req,res,next){
     try {
-        if (req.body.username && req.body.password && req.body.email && req.body.phone ) { //&& req.body.email && req.body.phone
+        if (req.body.username && req.body.password && req.body.email && req.body.phone ) {
             const result = await validation.registerSchema.validateAsync(req.body);
             console.log(result)
             return next();

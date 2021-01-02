@@ -54,7 +54,7 @@ app.use('/',(req,res,next)=>{
     
 });
 
-Routes(app,__dirname);
+Routes(app);
 
 app.listen(port, () => {
 	console.log(`Server started on ${port}`);
