@@ -2,7 +2,7 @@
 require('dotenv').config();
 const User = require('../models/Users.model');
 const Admin = require('../models/Admin.model');
-const Encryption = require('../middleware/encryption');
+const Encryption = require('../Utils/encryption');
 const Token = require('../models/TokenModel');
 const qs = require('qs');
 const axios = require('axios');

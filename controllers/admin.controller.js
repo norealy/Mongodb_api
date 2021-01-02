@@ -2,7 +2,7 @@
 require('dotenv').config();
 const Admin = require('../models/Admin.model');
 const Token = require('../models/TokenModel');
-const Encryption = require('../middleware/encryption');
+const Encryption = require('../Utils/encryption');
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
 /**

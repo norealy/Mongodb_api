@@ -1,5 +1,5 @@
 require('dotenv').config();
-const decryption = require('./encryption');
+const decryption = require('../Utils/encryption');
 const Tokens = require('../models/TokenModel');
 const jws = require('jws');
 const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
