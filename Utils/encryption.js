@@ -1,8 +1,8 @@
 'use strict';
 require('dotenv').config();
 const crypto = require('crypto');
-const secretRefeshKey = process.env.REFRESH_TOKEN_KEY || "U2ltcGx5IGVudGVyIHlvdXIgZGF0YSB0aGVuIHB1c2ggdGhlIGVuY29kZSBidXR0b24u";
-const IV = process.env.IV || 'GVuIHB1c2ggdGhlI'
+const secretRefeshKey = process.env.JWS_REFRESH_TOKEN_KEY || "U2ltcGx5IGVudGVyIHlvdXIgZGF0YSB0aGVuIHB1c2ggdGhlIGVuY29kZSBidXR0b24u";
+const IV = process.env.REFRESH_IV || 'GVuIHB1c2ggdGhlI'
 
 /**
  * 

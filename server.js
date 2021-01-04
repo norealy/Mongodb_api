@@ -10,7 +10,7 @@ dbMongoConnect();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
-const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
+const secretAccessKey = process.env.JWS_ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 app.use('/', express.static('public'));
 app.use('/',(req,res,next)=>{
     const path = req.path.split("/");

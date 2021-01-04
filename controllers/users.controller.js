@@ -7,8 +7,8 @@ const jws = require('jws')
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
 const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
-const secretAccessKey = process.env.ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
-const duration = parseInt(process.env.JWT_DURATION || 2400);
+const secretAccessKey = process.env.JWS_ACCESS_TOKEN_KEY || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
+const duration = parseInt(process.env.JWS_DURATION || 2400);
 /**
  * 
  * @param {string} password 
@@ -40,7 +40,7 @@ exports.addUser = async (req, res) => {
 			const iat = Math.floor(new Date()/1000);
 			const exp = iat + duration;
 			const access_Token =  jws.sign({
-				header: {alg:'HS256',typ:'JWT'},
+				header: {alg:process.env.JWS_ALG||'HS256',typ:'JWT'},
 				payload: {uid: user._id, iat, exp},
 				secret:secretAccessKey
 			});
@@ -52,7 +52,7 @@ exports.addUser = async (req, res) => {
 			res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
 
 		} catch (error) {
-			console.log(error)
+			console.log("error")
 			res.send("Username exist")
 		}
 

@@ -2,10 +2,10 @@ require('dotenv').config();
 const decryption = require('../Utils/encryption');
 const Tokens = require('../models/TokenModel');
 const jws = require('jws');
-const secretAccessKey = process.env.ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
-const duration = parseInt(process.env.JWT_DURATION || 2400);
+const secretAccessKey = process.env.JWS_ACCESS_TOKEN_KEY || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
+const duration = parseInt(process.env.JWS_DURATION || 2400);
 const durationRefresh = parseInt(process.env.REFRESH_DUCATION || 31536000);
-const alg = process.env.ALG ||"HS256";
+const alg = process.env.JWS_ALG ||"HS256";
 
 module.exports.verifyAccessToken = async function (req,res,next){
     const accessToken = req.header('Access_Token');
@@ -68,7 +68,7 @@ module.exports.verifyRefreshToken = async function (req,res){
             }
             const exp = now + duration;
             const access_Token =  jws.sign({
-                header: {alg:'HS256',typ:'JWT'},
+                header: {alg: alg,typ:'JWT'},
                 payload: {uid: uid, iat:now, exp},
                 secret:secretAccessKey
             });

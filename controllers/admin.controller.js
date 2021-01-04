@@ -5,6 +5,8 @@ const Token = require('../models/TokenModel');
 const Encryption = require('../Utils/encryption');
 const {v4:uuid_V4} = require('uuid')
 const bcrypt = require('bcrypt');
+const { parseInt } = require('lodash');
+const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
 /**
  * 
  * @param {string} password 
@@ -30,8 +32,9 @@ exports.addAdmin = async (req, res) => {
 	if (req.body.username&&req.body.username&&req.body.email&&req.body.phone) {
 		const {username,password,email,phone} = req.body;
 		try {
-			const salt = await bcrypt.genSalt(saltRounds);
-			const hashPassword = await bcrypt.hash(password, salt);
+			console.log("Oke")
+			const hashPassword = await convertPassword(password);
+			console.log(hashPassword)
 			const newuser = new Admin({username,password:hashPassword,email:email,phone:phone});
 			const user = await newuser.save();
 			console.log("Admin",user);

@@ -13,3 +13,7 @@ App :   Client _id
 
     Post IDToken + secret => Api get token Microsoft    return Access_Token and Refresh_Token;
 
+
+=================================
+rm -r --cached
+NODE_ENV=development  add to .NODE_ENV
