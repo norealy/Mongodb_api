@@ -4,11 +4,11 @@ const productCtrl = require('../controllers/product.controller');
 const Validation = require('../middleware/checktype');
 const veryToken = require('../middleware/veryToken');
 
-router.post('/add', veryToken.verifyAccessToken ,Validation.addProduct ,productCtrl.addProduct)
+router.post('/add' ,Validation.addProduct ,productCtrl.addProduct)
 
-router.put('/update',veryToken.verifyAccessToken ,Validation.UpdateProduct,productCtrl.changeInfo)
+router.put('/update' ,Validation.UpdateProduct,productCtrl.changeInfo)
 
-router.delete('/delete',veryToken.verifyAccessToken, productCtrl.deleteByID)
+router.delete('/delete', productCtrl.deleteByID)
 
 router.get('/list', productCtrl.listProducts)
 
