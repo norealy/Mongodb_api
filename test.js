@@ -1,5 +1,5 @@
 
-const crypto = require('crypto');
+let crypto = require('crypto');
 const refreshSecret = process.env.REFRESH_SECRET || "U2ltcGx5IGVudGVyIHlvdXIgZGF0YSB0aGVuIHB1c2ggdGhlIGVuY29kZSBidXR0b24u";
 const IV = process.env.REFRESH_IV || 'GVuIHB1c2ggdGhlI'
 
@@ -20,11 +20,17 @@ const encryptToken = function(tokenId){
  */
 const decryptToken = function (tokenString) {
     const decipher = crypto.Decipher('aes-256-gcm', Buffer.from(refreshSecret,'hex'),Buffer.from(IV,'hex'));
-    // decipher.setAutoPadding(false);
     let token_id = decipher.update(tokenString, 'hex', 'utf8');
 	return token_id;
 }
-module.exports = {
-	encryptToken,
-	decryptToken
-}
+
+const token = encryptToken("ABC-ABCXX");
+const id = decryptToken(token);
+console.log(id);
+
+
+
+// module.exports = {
+// 	encryptToken,
+// 	decryptToken
+// }

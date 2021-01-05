@@ -1,4 +1,4 @@
-const {decryptToken} = require('../Utils/Encryption');
+const {decryptToken} = require('../utils/Encryption');
 const Tokens = require('../models/TokenModel');
 const jws = require('jws');
 const jwsSecret = process.env.JWS_SECRET || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
@@ -24,10 +24,11 @@ module.exports.verifyRefreshToken = async function (req,res){
         if(verified){
             const jwsData = jws.decode(accessToken)
             const uid = jwsData.payload['uid']
-            let token_id = decryptToken(refreshToken)
-            console.log(token_id)
-            const tokenSuccess = await Tokens.findOne({"user_uid":uid,"uid_token":token_id,"is_revoke":false})
+            let tokenUid = decryptToken(refreshToken)
+            console.log("uid:",uid,"-tokenUid:",tokenUid)
+            const tokenSuccess = await Tokens.findOne({"user_uid":uid,"uid_token":tokenUid,"is_revoke":false})
             if(!tokenSuccess){
+                console.log("Not token in database");
                 return res.status(401).send({
                     code: "E_INVALID_JWT_REFRESH_TOKEN",
                     message: `Invalid refresh token ${refreshToken}`
@@ -58,6 +59,7 @@ module.exports.verifyRefreshToken = async function (req,res){
             message: "The Jwt token is invalid",
         });
     } catch (error) {
+        console.log(error)
         return res.status(401).send('Invalid Token');
     }
 }

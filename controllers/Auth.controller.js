@@ -1,13 +1,13 @@
 'use strict';
 const User = require('../models/Users.model');
-const {encryptToken} = require('../Utils/Encryption');
+const {encryptToken} = require('../utils/Encryption');
 const Token = require('../models/TokenModel');
 const qs = require('qs');
 const axios = require('axios');
 const jws = require('jws');
 const { v4: uuid_V4 } = require('uuid');
-const {hashPass,checkPass} = require('../Utils/Password.utils');
-const {userLogin,adminLogin} = require('../Utils/LoginChecked.utils');
+const {hashPass,checkPass} = require('../utils/Password.utils');
+const {userLogin,adminLogin} = require('../utils/LoginChecked.utils');
 const jwsSecret = process.env.JWS_SECRET || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWS_DURATION || 2400);
 const refreshDuration = parseInt(process.env.REFRESH_DUCATION || 2400);
@@ -74,7 +74,7 @@ const getDataUserAzure = async (req, res) => {
 				});
 				const uid_token = uuid_V4();
 				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Date.now();
+				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 				res.cookie("Refresh-token", refreshToken, {
 					maxAge: expCookie,
 					httpOnly: true,
@@ -95,15 +95,15 @@ const getDataUserAzure = async (req, res) => {
 					payload: { uid: user._id, iat, exp },
 					secret: jwsSecret
 				});
-				const uidToken = uuid_V4();
-				const refreshToken = encryptToken(uidToken)
-				const expCookie = refreshDuration + Date.now();
+				const uid_token = uuid_V4();
+				const refreshToken = encryptToken(uid_token)
+				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 				res.cookie("Refresh-token", refreshToken, {
 					maxAge: expCookie,
 					httpOnly: true,
 					sameSite: "Strict",
 				});
-				const newToken = new Token({ user_uid: user._id, uid_token:uidToken, is_revoke: false, created_At: iat, updated_at: iat });
+				const newToken = new Token({ user_uid: user._id, uid_token:uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 				await newToken.save();
 				return res.status(201).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken});
 
@@ -161,7 +161,7 @@ const getDataUserGG =async (req, res) => {
 				});
 				const uid_token = uuid_V4();
 				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Date.now();
+				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 				res.cookie("Refresh-token", refreshToken, {
 					maxAge: expCookie,
 					httpOnly: true,
@@ -184,13 +184,13 @@ const getDataUserGG =async (req, res) => {
 				});
 				const uid_token = uuid_V4();
 				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Date.now();
+				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 				res.cookie("Refresh-token", refreshToken, {
 					maxAge: expCookie,
 					httpOnly: true,
 					sameSite: "Strict",
 				});
-				const newToken = new Token({ user_uid: user._id, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+				const newToken = new Token({ user_uid: user._id, uid_token:uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 				await newToken.save();
 				return res.status(201).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken});
 
@@ -217,7 +217,7 @@ const adminLoginAuth = async (req, res) => {
 					payload: { uid: uid, roles: "admin", iat, exp },
 					secret: jwsSecret,
 				});
-				const expCookie = refreshDuration + Date.now();
+				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 				const uid_token = uuid_V4();
 				const refreshToken = encryptToken(uid_token)
 				res.cookie("Refresh-token", refreshToken, {
@@ -226,6 +226,8 @@ const adminLoginAuth = async (req, res) => {
 					// secure: true,
 					sameSite: "Strict",
 				});
+				const newToken = new Token({ user_uid: uid, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+				await newToken.save();
 				return res.send({ access_Token: access_Token });
 			} else {
 				return res.send("Wrong username or password");
@@ -252,13 +254,15 @@ const login = async (req, res) => {
 				});
 				const uid_token = uuid_V4();
 				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Date.now();
+				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 				res.cookie("Refresh-token", refreshToken, {
 					maxAge: expCookie,
 					httpOnly: true,
 					sameSite: "Strict",
 				});
-				return res.send({ Access_Token: accessToken });
+				const newToken = new Token({ user_uid: uid, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+				await newToken.save();
+				return res.send({ Access_Token: accessToken ,refreshToken:refreshToken});
 			} else {
 				return res.send("Wrong username or password");
 			}
@@ -285,7 +289,7 @@ const register = async (req, res) => {
 			});
 			const uid_token = uuid_V4();
 			const refreshToken = encryptToken(uid_token)
-			const expCookie = refreshDuration + Date.now();
+			const expCookie = refreshDuration + Math.floor(new Date() / 1000);
 			res.cookie("Refresh-token", refreshToken, {
 				maxAge: expCookie,
 				httpOnly: true,

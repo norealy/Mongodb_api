@@ -1,10 +1,10 @@
 'use strict';
 const User = require('../models/Users.model');
 const Token = require('../models/TokenModel');
-const Encryption = require('../Utils/Encryption');
+const Encryption = require('../utils/Encryption');
 const jws = require('jws')
 const {v4:uuid_V4} = require('uuid')
-const {hashPass,checkPass} = require('../Utils/Password.utils')
+const {hashPass,checkPass} = require('../utils/Password.utils')
 const secretAccessKey = process.env.JWS_SECRET || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
 const duration = parseInt(process.env.JWS_DURATION || 2400);
 

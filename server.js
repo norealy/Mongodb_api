@@ -35,7 +35,7 @@ app.use('/', (req, res, next) => {
         const jwsData = jws.decode(accessToken);
         const roles = jwsData.payload.roles;
         if (roles === undefined || roles === "" || roles === null) {
-            if (path[2] == 'account' || path[1] == 'orders' || (path[1] == 'products' && path[2] != 'list')) {
+            if (path[2] == 'account' || path[1] == 'orders' || (path[1] == 'products' && path[2] != 'list') || path[1]=='refresh-token') {
                 return next();
             } else {
                 return res.status(401).send("What do you want !");

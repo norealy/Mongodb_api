@@ -1,11 +1,11 @@
 'use strict';
 const Admin = require('../models/Admin.model');
 const Token = require('../models/TokenModel');
-const {encryptToken} = require('../Utils/Encryption');
+const {encryptToken} = require('../utils/Encryption');
 const {v4:uuid_V4} = require('uuid');
-const {hashPass,checkPass} = require('../Utils/Password.utils');
+const {hashPass,checkPass} = require('../utils/Password.utils');
 
-exports.addAdmin = async (req, res) => {
+const addAdmin = async (req, res) => {
 	if (req.body.username&&req.body.username&&req.body.email&&req.body.phone) {
 		const {username,password,email,phone} = req.body;
 		try {
@@ -30,7 +30,7 @@ exports.addAdmin = async (req, res) => {
 	}
 };
 
-exports.changePass = async (req, res) => {
+const changePass = async (req, res) => {
 	if (req.body.id && req.body.password && req.body.newPassword) {
 		let {id,password,newPassword} = req.body;
 		const userT = await Admin.findOne({ "_id": id });
@@ -52,7 +52,7 @@ exports.changePass = async (req, res) => {
 	}
 };
 
-exports.changeInfo = async (req, res) => {
+const changeInfo = async (req, res) => {
 	if(req.body.id){
 		let user = req.body;
 		await Admin.findOneAndUpdate({ "_id": user.id }, {"avatar":user.avatar , "fullname":user.fullname, "phone":user.phone, "address" : user.address}, { new: true }, function (err, data) {
@@ -64,12 +64,12 @@ exports.changeInfo = async (req, res) => {
 	}
 };
 
-exports.listUsers = async (req, res) => {
+const listUsers = async (req, res) => {
 	let arrayUser = await Admin.find();
 	return res.send(arrayUser);
 };
 
-exports.userID = async (req, res) => {
+const userID = async (req, res) => {
 	if(req.params.id){
 		let user = await Admin.findOne({"_id":req.params.id});
 		return res.send(user);
@@ -79,7 +79,7 @@ exports.userID = async (req, res) => {
 };
 
 
-exports.deleteByID = async (req, res) => {
+const deleteByID = async (req, res) => {
 	if (req.body.id) {
 		await Admin.remove({ _id: req.body.id }, function (err, data) {
 			if (err) return console.error(err);
@@ -89,7 +89,7 @@ exports.deleteByID = async (req, res) => {
 		return req.send('Not remove id empty !');
 	}
 };
-exports.deleteByUsername = async (req, res) => {
+const deleteByUsername = async (req, res) => {
 	if (req.body.username) {
 		await Admin.deleteMany({ "username": req.body.username }, function (err, data) {
 			if (err) return console.error(err);
@@ -99,3 +99,14 @@ exports.deleteByUsername = async (req, res) => {
 		return req.send('Not remove id empty !');
 	}
 };
+
+module.exports = {
+	addAdmin,
+	changePass,
+	changeInfo,
+	listUsers,
+	userID,
+	deleteByID,
+	deleteByUsername
+}
+
