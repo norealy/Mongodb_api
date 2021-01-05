@@ -1,38 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const Auth = require('../controllers/auth.controller');
-const Validation = require('../middleware/checktype');
+const Auth = require('../controllers/Auth.controller');
+const Validation = require('../middleware/Validator.middleware');
 
 router.get('/login',(req,res)=>{
-	console.log("__dirname: "+__dirname);
 	let path = __dirname.split('/');
 	path.pop();
-	path=path.join('/')
-	console.log('Path: '+path)
+	path = path.join('/')
 	const file = path + '/views/login.html';
-    res.sendFile(file)
+    res.sendFile(file);
 })
 router.get('/register',(req,res)=>{
-	console.log("__dirname: "+__dirname);
 	let path = __dirname.split('/');
 	path.pop();
-	path=path.join('/')
-	console.log('Path: '+path)
+	path = path.join('/');
 	const file = path + '/views/register.html';
-    res.sendFile(file)
+    res.sendFile(file);
 })
 
 router.get('/login-microsoft',Auth.redirectMicrosoft)
 
-router.get('/microsoft',Auth.getDataUser)
+router.get('/microsoft',Auth.getDataUserAzure)
 
 router.get('/login-google',Auth.getRidirectGG)
 
-router.get('/google',Auth.getDataUser_GG)
+router.get('/google',Auth.getDataUserGG)
 
 router.post('/login' , Validation.login ,Auth.login);
 
-router.post('/admin/login', Validation.login , Auth.adminLogin)
+router.post('/admin/login', Validation.login , Auth.adminLoginAuth)
 
 router.post('/register', Validation.register ,Auth.register);
 

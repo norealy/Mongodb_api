@@ -1,7 +1,7 @@
 const Orders = require('../models/Orders.model');
 const Products = require('../models/Product.model');
 
-exports.listOrders = async (req, res) => {
+const listOrders = async (req, res) => {
   if(req.params.id_user){
     try {
       let arrayOrders = await Orders.find({"id_user":req.params.id_user});
@@ -18,7 +18,7 @@ exports.listOrders = async (req, res) => {
   
 };
   
-exports.ordersID = async (req, res) => {
+const ordersID = async (req, res) => {
   if(req.params.id){
     let order = await Orders.findOne({"_id":req.params.id});
     return res.send(order);
@@ -27,7 +27,7 @@ exports.ordersID = async (req, res) => {
   }
 };
 
-exports.addOrders = async (req, res) => {
+const addOrders = async (req, res) => {
   if (req.body) {
     const arrProduct = req.body.Orders_details;
     let total_money = 0;
@@ -41,13 +41,12 @@ exports.addOrders = async (req, res) => {
     let newOrders = new Orders(orderr);
     await newOrders.save(function (err, data) {
       if (err) return console.error(err);
-      console.log(data);
       res.send(data);
     });
   }
 };
 
-exports.EditOrder = async (req, res) => {
+const editOrder = async (req, res) => {
   if(req.body.id){
     let orders = req.body;
     await Orders.findOneAndUpdate(
@@ -67,21 +66,27 @@ exports.EditOrder = async (req, res) => {
 };
 
 
-exports.deleteByID = async (req, res) => {
+const deleteByID = async (req, res) => {
   if (req.body.id_order&&req.body.id_user) {
     try {
         const orderDelte = await Orders.findOneAndRemove({ "_id": req.body.id_order,"id_user":req.body.id_user })
-        console.log("orderDelte: ",orderDelte)
         if(orderDelte){
           return res.send(orderDelte);
         }else{
           return res.send('Not found id !');
         }
     } catch (error) {
-      console.log("error",error)
       return res.send('Not remove !');
     }
   } else {
     return res.send('Not remove id empty !');
   }
 };
+
+module.exports = {
+  listOrders,
+  ordersID,
+  addOrders,
+  editOrder,
+  deleteByID,
+}

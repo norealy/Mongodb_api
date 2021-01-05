@@ -1,10 +1,10 @@
 const Product = require('../models/Product.model');
-exports.listProducts = async (req, res) => {
+const listProducts = async (req, res) => {
 	let arrayProduct = await Product.find();
 	return res.send(arrayProduct);
 };
 
-exports.ProductID = async (req, res) => {
+const productID = async (req, res) => {
 	if (req.params.id) {
 		let pproduct = await Product.findById(req.params.id);
 		return res.send(pproduct);
@@ -12,7 +12,7 @@ exports.ProductID = async (req, res) => {
 		return res.send('Not found !');
 	}
 };
-exports.Product_byCategories = async (req, res) => {
+const productByCategories = async (req, res) => {
 	if (req.body.category_name) {
 		try {
 			let newProduct = await Product.find({'Categories.name':req.body.category_name});
@@ -24,31 +24,25 @@ exports.Product_byCategories = async (req, res) => {
 		return res.send('Not found !');
 	}
 };
-exports.Product_seller = async (req, res) => {
-	console.log(req.body)
+const productShowSeller = async (req, res) => {
 	if (req.body.id_seller) {
-		console.log("ID SELLER",req.body.id_seller)
 		const pproduct = await Product.find({id_seller: req.body.id_seller});
-		console.log(pproduct)
 		return res.status(200).send(pproduct);
 	} else {
 		return res.status(401).send('Not found !');
 	}
 };
-
-exports.addProduct = async (req, res) => {
+const addProduct = async (req, res) => {
 	if (req.body) {
 		let product = req.body;
 		let newProduct = new Product(product);
 		await newProduct.save(function (err, data) {
 			if (err) return console.error(err);
-			console.log(data);
 			res.send(data);
 		});
 	}
 };
-
-exports.updateCount = async (req, res) => {
+const updateCount = async (req, res) => {
 	if (req.body.id) {
 		let product = req.body;
 		await Product.find({ _id: req.body.id }, async function (err, data) {
@@ -72,7 +66,7 @@ exports.updateCount = async (req, res) => {
 	}
 };
 
-exports.changeInfo = async (req, res) => {
+const changeInfo = async (req, res) => {
 	if (req.body.id) {
 		let product = req.body;
 		await Product.findOneAndUpdate(
@@ -95,7 +89,7 @@ exports.changeInfo = async (req, res) => {
 	}
 };
 
-exports.deleteByID = async (req, res) => {
+const deleteByID = async (req, res) => {
 	if (req.body.id) {
 		await Product.remove({ _id: req.body.id }, function (err, data) {
 			if (err) return console.error(err);
@@ -105,3 +99,14 @@ exports.deleteByID = async (req, res) => {
 		return res.send('Not remove id empty !');
 	}
 };
+
+module.exports = {
+	listProducts,
+	productID,
+	productByCategories,
+	productShowSeller,
+	addProduct,
+	updateCount,
+	changeInfo,
+	deleteByID
+}

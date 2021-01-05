@@ -1,52 +1,26 @@
 'use strict';
-require('dotenv').config();
 const Admin = require('../models/Admin.model');
 const Token = require('../models/TokenModel');
-const Encryption = require('../Utils/encryption');
-const {v4:uuid_V4} = require('uuid')
-const bcrypt = require('bcrypt');
-const { parseInt } = require('lodash');
-const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
-/**
- * 
- * @param {string} password 
- */
-async function convertPassword(password) {
-	const salt = await bcrypt.genSalt(saltRounds);
-	const hashPassword = await bcrypt.hash(password, salt);
-	return hashPassword;
-}
-/**
- * 
- * @param {string} password 
- * @param {string} hashpass - password Hash by bcrypt
- * @returns true
- */
-async function checkPass(password,hashpass) {
-	const check = await bcrypt.compare(password, hashpass);
-	console.log("Check Password :",check)
-	return check;
-}
+const {encryptToken} = require('../Utils/Encryption');
+const {v4:uuid_V4} = require('uuid');
+const {hashPass,checkPass} = require('../Utils/Password.utils');
 
 exports.addAdmin = async (req, res) => {
 	if (req.body.username&&req.body.username&&req.body.email&&req.body.phone) {
 		const {username,password,email,phone} = req.body;
 		try {
-			console.log("Oke")
-			const hashPassword = await convertPassword(password);
-			console.log(hashPassword)
+			const hashPassword = await hashPass(password);
 			const newuser = new Admin({username,password:hashPassword,email:email,phone:phone});
 			const user = await newuser.save();
-			console.log("Admin",user);
 			const iat = Math.floor(new Date()/1000);
 			const uid_token = uuid_V4();
-			const refresh_token = Encryption.encryptoken(uid_token)
+			const refresh_token = encryptToken(uid_token)
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
-			console.log("refresh_token",refresh_token)
 			res.status(201).send({Amin:user,Refresh_Token:refresh_token,uid_token:uid_token});
 			return;
 		} catch (error) {
+			console.log(error)
 			res.send("Username exist !");
 			return;
 		}
@@ -60,7 +34,7 @@ exports.changePass = async (req, res) => {
 	if (req.body.id && req.body.password && req.body.newPassword) {
 		let {id,password,newPassword} = req.body;
 		const userT = await Admin.findOne({ "_id": id });
-		const hashPassword = await convertPassword(newPassword);
+		const hashPassword = await hashPass(newPassword);
 		const check = await checkPass(password,userT.password);
 		if(check){
 			await Admin.updateOne({ _id: id}, {
