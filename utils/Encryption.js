@@ -2,7 +2,6 @@
 const crypto = require('crypto');
 const refreshSecret = process.env.REFRESH_SECRET || "U2ltcGx5IGVudGVyIHlvdXIgZGF0YSB0aGVuIHB1c2ggdGhlIGVuY29kZSBidXR0b24u";
 const IV = process.env.REFRESH_IV || 'GVuIHB1c2ggdGhlI'
-
 /**
  * 
  * @param {string} uidToken 

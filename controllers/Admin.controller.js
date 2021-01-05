@@ -20,7 +20,6 @@ const addAdmin = async (req, res) => {
 			res.status(201).send({Amin:user,Refresh_Token:refresh_token,uid_token:uid_token});
 			return;
 		} catch (error) {
-			console.log(error)
 			res.send("Username exist !");
 			return;
 		}

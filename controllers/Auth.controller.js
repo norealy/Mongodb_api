@@ -112,7 +112,6 @@ const getDataUserAzure = async (req, res) => {
 			}
 		}
 	} catch (error) {
-		console.log(error)
 		return res.status(401).send("Azure login fail !!! ")
 	}
 };
@@ -199,7 +198,6 @@ const getDataUserGG =async (req, res) => {
 			}
 		}
 	} catch (error) {
-		console.log(error)
 		return res.status(401).send("Login Error")
 	}
 }
@@ -234,7 +232,6 @@ const adminLoginAuth = async (req, res) => {
 			}
 		}
 	} catch (error) {
-		console.log(error)
 		return res.send("Login Fail !");
 	}
 };
@@ -243,7 +240,6 @@ const login = async (req, res) => {
 		const { username, password } = req.body;
 		if (username && password) {
 			const uid = await userLogin(username, password);
-			console.log(uid)
 			if (uid) {
 				const iat = Math.floor(new Date() / 1000);
 				const exp = iat + duration;
@@ -268,7 +264,6 @@ const login = async (req, res) => {
 			}
 		}
 	} catch (error) {
-		console.log(error)
 		return res.send("Login Fail !");
 	}
 };
@@ -300,7 +295,6 @@ const register = async (req, res) => {
 			return res.status(201).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken, uid_token: uid_token });
 
 		} catch (error) {
-			console.log(error)
 			return res.send("Username exist")
 		}
 

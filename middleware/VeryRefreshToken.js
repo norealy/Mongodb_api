@@ -20,15 +20,12 @@ module.exports.verifyRefreshToken = async function (req,res){
         const accessToken = req.header('Access_Token');
         if(!accessToken){return res.status(401).send('Access token Denis !')}
         const verified = await jws.verify(accessToken,alg,jwsSecret);
-        console.log(verified)
         if(verified){
             const jwsData = jws.decode(accessToken)
             const uid = jwsData.payload['uid']
             let tokenUid = decryptToken(refreshToken)
-            console.log("uid:",uid,"-tokenUid:",tokenUid)
             const tokenSuccess = await Tokens.findOne({"user_uid":uid,"uid_token":tokenUid,"is_revoke":false})
             if(!tokenSuccess){
-                console.log("Not token in database");
                 return res.status(401).send({
                     code: "E_INVALID_JWT_REFRESH_TOKEN",
                     message: `Invalid refresh token ${refreshToken}`
@@ -59,16 +56,6 @@ module.exports.verifyRefreshToken = async function (req,res){
             message: "The Jwt token is invalid",
         });
     } catch (error) {
-        console.log(error)
         return res.status(401).send('Invalid Token');
     }
 }
-
-
-// user
-// "Refresh_Token": "d22709f680daebf4f095f3f87cbebe48a318d7a8933ee10addd25464440a57e22d94169f"
-// "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhM2IxMTYzMTdhZjVlYjEyMzRlODQiLCJpYXQiOjE2MDkxODYwNjUsImV4cCI6MTYwOTE4OTY2NX0.-KQ2YqFKp63Bdi__hcF2y7PwRyHxgc0nIoaiPHMBL2I"
-
-// Admin 
-// "Refresh_Token": "837559a485dde0f6f0c5f2ac2fbebe42f61bd7f3ce6bec0ad8d6503618095eef7d9e1795"
-// "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5MzYyMzYwLCJleHAiOjE2MDkzNjU5NjB9.Y0yKOVIpjgOtAUELT1bcHESPm72RgvHWdkdiaEHaInM"
