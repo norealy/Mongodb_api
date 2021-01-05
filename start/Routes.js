@@ -1,8 +1,8 @@
-const Auth = require ('./Auth.route');
-const User = require ('./User.route');
-const Order = require ('./Order.route');
-const Products = require ('./Product.route');
-const Admin = require ('./Admin.route');
+const Auth = require ('../routes/Auth.route');
+const User = require ('../routes/User.route');
+const Order = require ('../routes/Order.route');
+const Products = require ('../routes/Product.route');
+const Admin = require ('../routes/Admin.route');
 const {verifyRefreshToken} = require('../middleware/VeryRefreshToken');
 
 function Routes(app) {

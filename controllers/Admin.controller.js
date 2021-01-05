@@ -18,14 +18,12 @@ const addAdmin = async (req, res) => {
 			const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
 			await newToken.save();
 			res.status(201).send({Amin:user,Refresh_Token:refresh_token,uid_token:uid_token});
-			return;
 		} catch (error) {
 			res.send("Username exist !");
-			return;
 		}
 	}else{
 		res.send("Username or password empty !");
-		return;
+
 	}
 };
 
