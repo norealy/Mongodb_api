@@ -1,0 +1,25 @@
+account : 
+app :   Client _id 
+        Client secret
+
+    ---------------------
+
+    Login   header: ClientId,Role, redirect
+
+    => Submit :    ctll redirect
+
+    URL : redirect + idtoken 
+
+
+    Post IDtoken + secret => tpi get token Microsoft    return access_token tnd Refresh_token;
+
+
+=================================
+rm -r --cached
+NODE_ENV=development  add to .NODE_ENV
+
+=================================
+method + path,status code, error mesage, proccess time,headers,
+
+
+

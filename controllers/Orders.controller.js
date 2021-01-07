@@ -1,0 +1,99 @@
+const Orders = require('../models/Orders.model');
+const Products = require('../models/Product.model');
+
+const listOrders = async (req, res) => {
+  if (req.params.id_user) {
+    try {
+      let arrayOrders = await Orders.find({ "id_user": req.params.id_user });
+      return res.status(200).send(arrayOrders);
+    } catch (error) {
+      return res.status(401).send("Fail");
+    }
+  } else {
+    return res.status(401).send("Fail");
+  }
+
+};
+
+const ordersID = async (req, res) => {
+  if (req.params.id) {
+    try {
+      let order = await Orders.findOne({ "_id": req.params.id });
+      return res.status(200).send(order);
+    } catch (error) {
+      return res.status(401).send("Fail");
+    }
+  } else {
+    return res.status(401).send("Fail");
+  }
+};
+
+const addOrders = async (req, res) => {
+  try {
+    const arrProduct = req.body.Orders_details;
+    let total_money = 0;
+    for (let i = 0; i < arrProduct.length; i++) {
+      const prodOrder = arrProduct[i];
+      const product = await Products.findOne({ "_id": prodOrder.id_product });
+      total_money += product.price * prodOrder.count_product;
+    }
+    req.body.total_money = total_money;
+    let orderr = req.body;
+    let newOrders = new Orders(orderr);
+    await newOrders.save(function (err, data) {
+      if (err) return res.status(401).send("Fail");
+      return res.status(200).send(data);
+    });
+  } catch (error) {
+    return res.status(401).send("Fail");
+  }
+};
+
+const editOrder = async (req, res) => {
+  if (req.body.id) {
+    try {
+      let orders = req.body;
+      await Orders.findOneAndUpdate(
+        { "_id": orders.id },
+        { $set: { "Orders_details.$[element].count_product": orders.count_product } },
+        {
+          multi: true,
+          arrayFilters: [{ "element.id_product": orders.id_product }]
+        },
+        function (err, data) {
+          if (err) return res.status(401).send("Fail");
+          return res.status(200).send(data);
+        });
+    } catch (error) {
+
+    }
+  } else {
+    return res.status(401).send("Fail");
+  }
+};
+
+
+const deleteByID = async (req, res) => {
+  if (req.body.id_order && req.body.id_user) {
+    try {
+      const orderDelte = await Orders.findOneAndRemove({ "_id": req.body.id_order, "id_user": req.body.id_user })
+      if (orderDelte) {
+        return res.status(200).send(orderDelte);
+      } else {
+        return res.status(401).send("Fail");
+      }
+    } catch (error) {
+      return res.status(401).send("Fail");
+    }
+  } else {
+    return res.status(401).send("Fail");
+  }
+};
+
+module.exports = {
+  listOrders,
+  ordersID,
+  addOrders,
+  editOrder,
+  deleteByID,
+}
