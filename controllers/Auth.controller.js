@@ -7,7 +7,7 @@ const axios = require('axios');
 const jws = require('jws');
 const { v4: uuid_V4 } = require('uuid');
 const { hashPass, checkPass } = require('../utils/Password');
-const { userLogin, adminLogin } = require('../utils/LoginChecked.utils');
+const { userLogin, adminLogin } = require('../utils/LoginChecked');
 const jwsSecret = process.env.JWS_SECRET || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
 const duration = parseInt(process.env.JWS_DURATION || 2400);
 const refreshDuration = parseInt(process.env.REFRESH_DUCATION || 2400);
@@ -31,7 +31,7 @@ const secretGG = process.env.GOOGLE_SECRET;
 const redirectMicrosoft = (req, res) => {
 	try {
 		const urlRequestAuthor = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${azureIdAzure}&response_type=code&redirect_uri=${redirectUrlAzure}&response_mode=query&scope=${scopeAzure}&state=${stateAzure}`;
-		return res.redirect(urlRequestAuthor)
+		return res.status(301).redirect(urlRequestAuthor)
 	} catch (error) {
 		return res.status(401).send("Redirect Fail")
 	}
@@ -68,52 +68,45 @@ const getDataUserAzure = async (req, res) => {
 		if (countU > 0) {
 			const user = await User.findOne({ authType: "microsoft", authID: `M_ID${result2.data.id}` });
 			const uid = user._id;
-			if (uid) {
-				const iat = Math.floor(new Date() / 1000);
-				const exp = iat + duration;
-				const accessToken = jws.sign({
-					header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
-					payload: { uid: uid, iat, exp },
-					secret: jwsSecret,
-				});
-				const uid_token = uuid_V4();
-				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
-				res.cookie("Refresh-token", refreshToken, {
-					maxAge: expCookie,
-					httpOnly: true,
-					sameSite: "Strict",
-				});
-				return res.status(201).send({ Access_Token: accessToken, Refresh_Token: refreshToken });
-			} else {
-				return res.send("Wrong login");
-			}
+			if (!uid) return res.status(401).send("Azure login fail !!! ")
+			const iat = Math.floor(new Date() / 1000);
+			const exp = iat + duration;
+			const accessToken = jws.sign({
+				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				payload: { uid: uid, iat, exp },
+				secret: jwsSecret,
+			});
+			const uid_token = uuid_V4();
+			const refreshToken = encryptToken(uid_token)
+			const expCookie = refreshDuration + Math.floor(new Date() / 1000);
+			res.cookie("Refresh-token", refreshToken, {
+				maxAge: expCookie,
+				httpOnly: true,
+				sameSite: "Strict",
+			});
+			return res.status(200).send({ Access_Token: accessToken, refreshToken: refreshToken });
 		} else {
-			try {
-				const newuser = new User({ email: result2.data.userPrincipalName, fullname: result2.data.displayName, authType: 'microsoft', authID: `M_ID${result2.data.id}` });
-				const user = await newuser.save();
-				const iat = Math.floor(new Date() / 1000);
-				const exp = iat + duration;
-				const accessToken = jws.sign({
-					header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
-					payload: { uid: user._id, iat, exp },
-					secret: jwsSecret
-				});
-				const uid_token = uuid_V4();
-				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
-				res.cookie("Refresh-token", refreshToken, {
-					maxAge: expCookie,
-					httpOnly: true,
-					sameSite: "Strict",
-				});
-				const newToken = new Token({ user_uid: user._id, uid_token: uid_token, is_revoke: false, created_At: iat, updated_at: iat });
-				await newToken.save();
-				return res.status(201).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken });
 
-			} catch (error) {
-				return res.send("Username exist")
-			}
+			const newuser = new User({ email: result2.data.userPrincipalName, fullname: result2.data.displayName, authType: 'microsoft', authID: `M_ID${result2.data.id}` });
+			const user = await newuser.save();
+			const iat = Math.floor(new Date() / 1000);
+			const exp = iat + duration;
+			const accessToken = jws.sign({
+				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				payload: { uid: user._id, iat, exp },
+				secret: jwsSecret
+			});
+			const uid_token = uuid_V4();
+			const refreshToken = encryptToken(uid_token)
+			const expCookie = refreshDuration + Math.floor(new Date() / 1000);
+			res.cookie("Refresh-token", refreshToken, {
+				maxAge: expCookie,
+				httpOnly: true,
+				sameSite: "Strict",
+			});
+			const newToken = new Token({ user_uid: user._id, uid_token: uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+			await newToken.save();
+			return res.status(200).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken });
 		}
 	} catch (error) {
 		return res.status(401).send("Azure login fail !!! ")
@@ -123,7 +116,7 @@ const getDataUserAzure = async (req, res) => {
 const getRidirectGG = (req, res) => {
 	try {
 		const urlRequestAuthor = `https://accounts.google.com/signin/oauth?access_type=${accessTypeGG}&scope=${scopeGG}&response_type=${responseTypeGG}&client_id=${clientIdGG}&redirect_uri=${redirectUrlGG}&state=${stateGG}`;
-		return res.redirect(urlRequestAuthor)
+		return res.status(301).redirect(urlRequestAuthor)
 	} catch (error) {
 		return res.status(401).send("Redirect Fail")
 	}
@@ -158,99 +151,10 @@ const getDataUserGG = async (req, res) => {
 		if (countU > 0) {
 			const user = await User.findOne({ authType: "google", authID: `GG_ID${dataUser.data.sub}` });
 			const uid = user._id;
-			if (uid) {
-				const iat = Math.floor(new Date() / 1000);
-				const exp = iat + duration;
-				const access_Token = jws.sign({
-					header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
-					payload: { uid: uid, iat, exp },
-					secret: jwsSecret,
-				});
-				const uid_token = uuid_V4();
-				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
-				res.cookie("Refresh-token", refreshToken, {
-					maxAge: expCookie,
-					httpOnly: true,
-					sameSite: "Strict",
-				});
-				return res.send({ Access_Token: access_Token });
-			} else {
-				return res.send("Wrong login");
-			}
-		} else {
-			try {
-				const newuser = new User({ email: dataUser.data.email, fullname: dataUser.data.name, avatar: dataUser.data.picture, authType: 'google', authID: `GG_ID${dataUser.data.sub}` });
-				const user = await newuser.save();
-				const iat = Math.floor(new Date() / 1000);
-				const exp = iat + duration;
-				const accessToken = jws.sign({
-					header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
-					payload: { uid: user._id, iat, exp },
-					secret: jwsSecret
-				});
-				const uid_token = uuid_V4();
-				const refreshToken = encryptToken(uid_token)
-				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
-				res.cookie("Refresh-token", refreshToken, {
-					maxAge: expCookie,
-					httpOnly: true,
-					sameSite: "Strict",
-				});
-				const newToken = new Token({ user_uid: user._id, uid_token: uid_token, is_revoke: false, created_At: iat, updated_at: iat });
-				await newToken.save();
-				return res.status(201).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken });
-
-			} catch (error) {
-				return res.send("Username exist")
-			}
-		}
-	} catch (error) {
-		return res.status(401).send("Login Error")
-	}
-}
-
-const adminLoginAuth = async (req, res) => {
-	try {
-		const { username, password } = req.body;
-		if (username && password) {
-			const uid = await adminLogin(username, password);
-			if (uid) {
-				const iat = Math.floor(new Date() / 1000);
-				const exp = iat + duration;
-				const accessToken = jws.sign({
-					header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
-					payload: { uid: uid, roles: "admin", iat, exp },
-					secret: jwsSecret,
-				});
-				const expCookie = refreshDuration + Math.floor(new Date() / 1000);
-				const uid_token = uuid_V4();
-				const refreshToken = encryptToken(uid_token)
-				res.cookie("Refresh-token", refreshToken, {
-					maxAge: expCookie,
-					httpOnly: true,
-					// secure: true,
-					sameSite: "Strict",
-				});
-				const newToken = new Token({ user_uid: uid, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
-				await newToken.save();
-				return res.send({ access_Token: accessToken, refreshToken:refreshToken });
-			} else {
-				return res.send("Wrong username or password");
-			}
-		}
-	} catch (error) {
-		return res.send("Login Fail !");
-	}
-};
-const login = async (req, res) => {
-	try {
-		const { username, password } = req.body;
-		const uid = await userLogin(username, password);
-		if (uid) {
+			if (!uid) return res.status(401).send("Wrong login");
 			const iat = Math.floor(new Date() / 1000);
 			const exp = iat + duration;
-			const accessToken = jws.sign({
+			const access_Token = jws.sign({
 				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
 				payload: { uid: uid, iat, exp },
 				secret: jwsSecret,
@@ -263,20 +167,99 @@ const login = async (req, res) => {
 				httpOnly: true,
 				sameSite: "Strict",
 			});
-			const newToken = new Token({ user_uid: uid, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
-			await newToken.save();
-			return res.send({ Access_Token: accessToken, refreshToken: refreshToken });
+			return res.status(200).send({ Access_Token: access_Token, refreshToken: refreshToken });
 		} else {
-			return res.send("Wrong username or password");
+			const newuser = new User({ email: dataUser.data.email, fullname: dataUser.data.name, avatar: dataUser.data.picture, authType: 'google', authID: `GG_ID${dataUser.data.sub}` });
+			const user = await newuser.save();
+			const iat = Math.floor(new Date() / 1000);
+			const exp = iat + duration;
+			const accessToken = jws.sign({
+				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				payload: { uid: user._id, iat, exp },
+				secret: jwsSecret
+			});
+			const uid_token = uuid_V4();
+			const refreshToken = encryptToken(uid_token)
+			const expCookie = refreshDuration + Math.floor(new Date() / 1000);
+			res.cookie("Refresh-token", refreshToken, {
+				maxAge: expCookie,
+				httpOnly: true,
+				sameSite: "Strict",
+			});
+			const newToken = new Token({ user_uid: user._id, uid_token: uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+			await newToken.save();
+			return res.status(200).send({ user, Access_Token: accessToken, refreshToken: refreshToken });
 		}
 	} catch (error) {
-		return res.send("Login Fail !");
+		return res.status(401).send("Login Error")
+	}
+}
+
+const adminLoginAuth = async (req, res) => {
+	try {
+		const { username, password } = req.body;
+		if (username && password) {
+			const uid = await adminLogin(username, password);
+			if (!uid) return res.status(401).send("Login Fail !")
+			const iat = Math.floor(new Date() / 1000);
+			const exp = iat + duration;
+			const accessToken = jws.sign({
+				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				payload: { uid: uid, roles: "admin", iat, exp },
+				secret: jwsSecret,
+			});
+			const expCookie = refreshDuration + Math.floor(new Date() / 1000);
+			const uid_token = uuid_V4();
+			const refreshToken = encryptToken(uid_token)
+			res.cookie("Refresh-token", refreshToken, {
+				maxAge: expCookie,
+				httpOnly: true,
+				secure: true,
+				sameSite: "Strict",
+			});
+			const newToken = new Token({ user_uid: uid, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+			await newToken.save();
+			return res.status(200).send({ access_Token: accessToken, refreshToken: refreshToken });
+		}
+	} catch (error) {
+		return res.status(401).send("Login Fail !");
+	}
+};
+const login = async (req, res) => {
+	try {
+		const { username, password } = req.body;
+		const uid = await userLogin(username, password);
+		if (!uid) return res.status(401).send("Login Fail !");
+		const iat = Math.floor(new Date() / 1000);
+		const exp = iat + duration;
+		const accessToken = jws.sign({
+			header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+			payload: { uid: uid, iat, exp },
+			secret: jwsSecret,
+		});
+		const uid_token = uuid_V4();
+		const refreshToken = encryptToken(uid_token)
+		const expCookie = refreshDuration + Math.floor(new Date() / 1000);
+		res.cookie("Refresh-token", refreshToken, {
+			maxAge: expCookie,
+			httpOnly: true,
+			sameSite: "Strict",
+		});
+		const newToken = new Token({ user_uid: uid, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
+		await newToken.save();
+		return res.status(200).send({ Access_Token: accessToken, refreshToken: refreshToken });
+	} catch (error) {
+		return res.status(401).send("Login Fail !");
 	}
 };
 
 const register = async (req, res) => {
 	try {
 		const { username, password, email, phone } = req.body;
+		const countUsername = await User.countDocuments({"username":username});
+		if(countUsername>0){
+			return res.status(401).send("Username exist");
+		}
 		const hashPassword = await hashPass(password)
 		const newuser = new User({ username, password: hashPassword, email, phone });
 		const user = await newuser.save();
@@ -297,10 +280,9 @@ const register = async (req, res) => {
 		});
 		const newToken = new Token({ user_uid: user._id, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 		await newToken.save();
-		return res.status(201).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken, uid_token: uid_token });
-
+		return res.status(200).send({ user, Access_Token: accessToken, refreshToken: refreshToken, uid_token: uid_token });
 	} catch (error) {
-		return res.send("Username exist")
+		return res.status(401).send("Login Fail !")
 	}
 };
 

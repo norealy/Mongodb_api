@@ -24,16 +24,17 @@ const productID = async (req, res) => {
 };
 const productByCategories = async (req, res) => {
 	try {
-		let newProduct = await Product.find({'Categories.name':req.body.category_name});
-		return res.send(newProduct);
+		let data = await Product.find({ 'Categories.name': req.body.category_name });
+		if (!data) return res.status(404).send("Not found !");
+		return res.status(200).send(data);
 	} catch (error) {
-		return res.send(error);
+		return res.status(404).send("Not found !");
 	}
 };
 const productShowSeller = async (req, res) => {
 	if (req.body.id_seller) {
 		try {
-			let pproduct = await Product.find({id_seller: req.body.id_seller});
+			let pproduct = await Product.find({ id_seller: req.body.id_seller });
 			return res.status(200).send(pproduct);
 		} catch (error) {
 			return res.status(404).send("Not found !");
@@ -42,16 +43,19 @@ const productShowSeller = async (req, res) => {
 		return res.status(404).send("Not found !");
 	}
 };
+
 const addProduct = async (req, res) => {
 	try {
 		let product = req.body;
 		let newProduct = new Product(product);
-		await newProduct.save();
+		const data = await newProduct.save();
+		if (!data) return res.status(401).send("Save Fail !");
 		return res.status(200).send(newProduct);
 	} catch (error) {
-		return res.status(404).send("Save Fail !");
+		return res.status(401).send("Save Fail !");
 	}
 };
+
 const updateCount = async (req, res) => {
 	if (req.body.id) {
 		let product = req.body;
@@ -63,29 +67,29 @@ const updateCount = async (req, res) => {
 				},
 				{ new: true },
 				function (err, data) {
-					if (err) return console.error(err);
-					return res.send(data);
+					if (err) return res.status(401).send("Update Fail !");
+					return res.status(200).send(data);
 				}
 			);
 		});
-		
-		
 	} else {
-		return res.send('Change info fail !');
+		return res.status(401).send("Update Fail !");
 	}
 };
 
 const changeInfo = async (req, res) => {
 	try {
 		let product = req.body;
-		const data = await Product.findOneAndUpdate({ _id: product.id, id_seller:product.id_seller}
-			,{"image": product.image,
-			"price": product.price,
-			"description": product.description,
-			"count_product": product.count_product,
-			"Categories.name" : product.Categories.name}
-			,{ new: true })
-		if(!data){
+		const data = await Product.findOneAndUpdate({ _id: product.id, id_seller: product.id_seller }
+			, {
+				"image": product.image,
+				"price": product.price,
+				"description": product.description,
+				"count_product": product.count_product,
+				"Categories.name": product.Categories.name
+			}
+			, { new: true })
+		if (!data) {
 			return res.status(401).send("ChangeInfo product fail !")
 		}
 		return res.status(200).send("ChangeInfo product Successfully !")
@@ -97,16 +101,16 @@ const changeInfo = async (req, res) => {
 
 const deleteByID = async (req, res) => {
 	try {
-		const productDel = await Product.findOne({_id:req.body.id , id_seller:req.body.id_seller});
-		if(!productDel){
+		const productDel = await Product.findOne({ _id: req.body.id, id_seller: req.body.id_seller });
+		if (!productDel) {
 			const admin = await Admin.findById(req.body.id_seller);
-			if(!admin){
+			if (!admin) {
 				return res.status(401).send("Delete product fail !")
 			}
-			await Product.deleteOne({_id:req.body.id});
+			await Product.deleteOne({ _id: req.body.id });
 			return res.status(200).send(`Deleted product id :${req.body.id}`)
 		}
-		await Product.deleteOne({_id:req.body.id , id_seller:req.body.id_seller});
+		await Product.deleteOne({ _id: req.body.id, id_seller: req.body.id_seller });
 		return res.status(200).send(`Deleted product id :${req.body.id}`)
 	} catch (error) {
 		return res.status(401).send("Delete product fail !")

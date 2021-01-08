@@ -50,28 +50,25 @@ const addOrders = async (req, res) => {
 };
 
 const editOrder = async (req, res) => {
-  if (req.body.id) {
-    try {
-      let orders = req.body;
-      await Orders.findOneAndUpdate(
-        { "_id": orders.id },
-        { $set: { "Orders_details.$[element].count_product": orders.count_product } },
-        {
-          multi: true,
-          arrayFilters: [{ "element.id_product": orders.id_product }]
-        },
-        function (err, data) {
-          if (err) return res.status(401).send("Fail");
-          return res.status(200).send(data);
-        });
-    } catch (error) {
-
-    }
-  } else {
+  if (!req.body.id||!req.body.count_product||!req.body.id_product) return res.status(401).send("Fail");
+  try {
+    let orders = req.body;
+    await Orders.findOneAndUpdate(
+      { "_id": orders.id },
+      { $set: { "Orders_details.$[element].count_product": orders.count_product } },
+      {
+        multi: true,
+        arrayFilters: [{ "element.id_product": orders.id_product }]
+      },
+      function (err, data) {
+        if (err) return res.status(401).send("Fail");
+        if (data===null) return res.status(401).send("Fail");
+        return res.status(200).send(data);
+      });
+  } catch (error) {
     return res.status(401).send("Fail");
   }
 };
-
 
 const deleteByID = async (req, res) => {
   if (req.body.id_order && req.body.id_user) {

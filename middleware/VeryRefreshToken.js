@@ -27,42 +27,39 @@ module.exports.verifyRefreshToken = async function (req, res) {
         }
         const verified = await jws.verify(accessToken, alg, jwsSecret);
         console.log(verified)
-        if (verified) {
-            const jwsData = jws.decode(accessToken)
-            const uid = jwsData.payload['uid']
-            let tokenUid = decryptToken(refreshToken)
-            const tokenSuccess = await Tokens.findOne({ "user_uid": uid, "uid_token": tokenUid, "is_revoke": false })
-            if (!tokenSuccess) {
-                return res.status(401)
-                    .send({
-                        code: "E_INVALID_JWT_REFRESH_TOKEN",
-                        message: `Invalid refresh token `
-                    });
-            }
-
-            const now = Math.floor(new Date() / 1000);
-            if (now - tokenSuccess.created_at >= durationRefresh) {
-                tokenSuccess.is_revoke = true;
-                await tokenSuccess.save();
-                return res.status(401)
-                    .send({
-                        code: "E_INVALID_JWT_REFRESH_TOKEN",
-                        message: `Invalid refresh token `
-                    });
-            }
-            const exp = now + duration;
-            const newAccessToken = jws.sign({
-                header: { alg: alg, typ: 'JWT' },
-                payload: { uid: uid, iat: now, exp },
-                secret: jwsSecret
-            });
-            return res.status(200).send({ Access_Token: newAccessToken });
+        if (!verified) return res.status(401).send({
+            code: "E_INVALID_JWT_REFRESH_TOKEN",
+            message: `Invalid refresh token `
+        });
+        const jwsData = jws.decode(accessToken)
+        const uid = jwsData.payload['uid']
+        let tokenUid = decryptToken(refreshToken)
+        const tokenSuccess = await Tokens.findOne({ "user_uid": uid, "uid_token": tokenUid, "is_revoke": false })
+        if (!tokenSuccess) {
+            return res.status(401)
+                .send({
+                    code: "E_INVALID_JWT_REFRESH_TOKEN",
+                    message: `Invalid refresh token `
+                });
         }
-        return res.status(401)
-            .send({
-                code: "E_INVALID_JWT_REFRESH_TOKEN",
-                message: `Invalid refresh token `
-            });
+
+        const now = Math.floor(new Date() / 1000);
+        if (now - tokenSuccess.created_at >= durationRefresh) {
+            tokenSuccess.is_revoke = true;
+            await tokenSuccess.save();
+            return res.status(401)
+                .send({
+                    code: "E_INVALID_JWT_REFRESH_TOKEN",
+                    message: `Invalid refresh token `
+                });
+        }
+        const exp = now + duration;
+        const newAccessToken = jws.sign({
+            header: { alg: alg, typ: 'JWT' },
+            payload: { uid: uid, iat: now, exp },
+            secret: jwsSecret
+        });
+        return res.status(200).send({ Access_Token: newAccessToken });
     } catch (error) {
         console.log(error)
         return res.status(401).send('Invalid Token');

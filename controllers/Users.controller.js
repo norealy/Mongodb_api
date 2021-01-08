@@ -3,29 +3,29 @@ const User = require('../models/Users.model');
 const Token = require('../models/TokenModel');
 const Encryption = require('../utils/Encryption');
 const jws = require('jws')
-const {v4:uuid_V4} = require('uuid')
-const {hashPass,checkPass} = require('../utils/Password')
+const { v4: uuid_V4 } = require('uuid')
+const { hashPass, checkPass } = require('../utils/Password')
 const secretAccessKey = process.env.JWS_SECRET || "RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=";
 const duration = parseInt(process.env.JWS_DURATION || 2400);
 
 const addUser = async (req, res) => {
-	const {username,password,email,phone} = req.body;
+	const { username, password, email, phone } = req.body;
 	try {
 		const hashPassword = await hashPass(password)
-		const newuser = new User({username,password:hashPassword,email:email,phone:phone});
+		const newuser = new User({ username, password: hashPassword, email: email, phone: phone });
 		const user = await newuser.save();
-		const iat = Math.floor(new Date()/1000);
+		const iat = Math.floor(new Date() / 1000);
 		const exp = iat + duration;
-		const access_Token =  jws.sign({
-			header: {alg:process.env.JWS_ALG||'HS256',typ:'JWT'},
-			payload: {uid: user._id, iat, exp},
-			secret:secretAccessKey
+		const access_Token = jws.sign({
+			header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+			payload: { uid: user._id, iat, exp },
+			secret: secretAccessKey
 		});
 		const uid_token = uuid_V4();
 		const refresh_token = Encryption.encryptToken(uid_token)
-		const newToken = new Token({user_uid:user._id,uid_token,is_revoke:false,created_At:iat, updated_at:iat});
+		const newToken = new Token({ user_uid: user._id, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 		await newToken.save();
-		res.status(201).send({user,Access_Token:access_Token,Refresh_Token:refresh_token,uid_token:uid_token});
+		res.status(201).send({ user, Access_Token: access_Token, Refresh_Token: refresh_token, uid_token: uid_token });
 	} catch (error) {
 		console.log(error)
 		res.send("Username exist")
@@ -34,22 +34,19 @@ const addUser = async (req, res) => {
 
 const changePass = async (req, res) => {
 	try {
-		let {id,password,newPassword} = req.body;
+		let { id, password, newPassword } = req.body;
 		const userT = await User.findOne({ "_id": id });
 		const hashPassword = await hashPass(newPassword);
-		const check = await checkPass(password,userT.password);
-		console.log("Check:",check)
-		if(check){
-			await User.updateOne({ _id: id}, {
-			$set: 
-				{ password: hashPassword}
-			}, function (err, data) {
-				if (err) return res.status(401).send("Change Password Fail !");
-				return res.status(200).send("Change password ok !");
-			});
-		}else{
-			return res.status(401).send("Wrong password !");
-		}
+		const check = await checkPass(password, userT.password);
+		console.log("Check:", check)
+		if (!check) return res.status(401).send("Wrong password !");
+		await User.updateOne({ _id: id }, {
+			$set:
+				{ password: hashPassword }
+		}, function (err, data) {
+			if (err) return res.status(401).send("Change Password Fail !");
+			return res.status(200).send("Change password ok !");
+		});
 	} catch (error) {
 		console.log(error)
 		return res.status(401).send("Change Password Fail !");
@@ -60,7 +57,7 @@ const forgetPassword = async (req, res) => {
 	try {
 		let user = req.body;
 		const hashPassword = await hashPass(req.body.newPassword)
-		await User.findOneAndUpdate({ _id: user.id}, { password: hashPassword }, { new: true }, function (err, data) {
+		await User.findOneAndUpdate({ _id: user.id }, { password: hashPassword }, { new: true }, function (err, data) {
 			if (err) return res.status(401).send("Forget Password Fail !");
 			return res.status(200).send("Forget password ok !");
 		});
@@ -73,9 +70,9 @@ const forgetPassword = async (req, res) => {
 const changeInfo = async (req, res) => {
 	try {
 		let user = req.body;
-		await User.findOneAndUpdate({ "_id": user.id }, {"avatar":user.avatar , "fullname":user.fullname, "phone":user.phone, "address" : user.address}, { new: true }, function (err, data) {
-		if (err) return res.status(401).send("Change Info Fail !");
-		return res.status(200).send("Change Info ok !");
+		await User.findOneAndUpdate({ "_id": user.id }, { "avatar": user.avatar, "fullname": user.fullname, "phone": user.phone, "address": user.address }, { new: true }, function (err, data) {
+			if (err) return res.status(401).send("Change Info Fail !");
+			return res.status(200).send("Change Info ok !");
 		});
 	} catch (error) {
 		return res.status(401).send("Change Info Fail !");
