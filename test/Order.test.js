@@ -1,6 +1,3 @@
-/* process.env.NODE_ENV = 'development';
-
-
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 const should = chai.should();
@@ -30,35 +27,6 @@ describe('******************** ORDERS TEST ********************', function () {
                     done();
                 });
         });
-        it('Delete by ID Orders and Not User', function (done) {
-            chai.request(server)
-                .delete('/orders/delete')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
-                .send({
-                    "id_order": "5ff3fa076136284ec05c4fe2",
-                    "id_user": "5fe91d9e893b5d1db88ae1d6"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-        it('Delete by ID Orders and ID User', function (done) {
-            chai.request(server)
-                .delete('/orders/delete')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
-                .send({
-                    "id_order": "5fe933558c275938caee0ed2",
-                    "id_user": "5fe91d9e893b5d1db88ae1d6"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-
     });
     describe('+ ORDERS ADD', function () {
         it('add by Orders True', function (done) {
@@ -94,7 +62,7 @@ describe('******************** ORDERS TEST ********************', function () {
                     "Categories": { "name": "Điện Tử" }
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -110,7 +78,7 @@ describe('******************** ORDERS TEST ********************', function () {
                     }]
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -126,7 +94,7 @@ describe('******************** ORDERS TEST ********************', function () {
                     }]
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -142,7 +110,7 @@ describe('******************** ORDERS TEST ********************', function () {
                     }]
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -152,9 +120,9 @@ describe('******************** ORDERS TEST ********************', function () {
                 .patch('/orders/update')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id":"5fe9331e8c275938caee0ed0",
-                    "id_product":"5fe927b59d04b12bfcf8fb98",
-                    "count_product":200
+                    "id": "5fe9331e8c275938caee0ed0",
+                    "id_product": "5fe927b59d04b12bfcf8fb98",
+                    "count_product": 555
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
@@ -167,11 +135,11 @@ describe('******************** ORDERS TEST ********************', function () {
                 .patch('/orders/update')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id":"5fe9331e8c275938caee0ed0",
-                    "count_product":3000
+                    "id": "5fe9331e8c275938caee0ed0",
+                    "count_product": 3000
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -181,8 +149,24 @@ describe('******************** ORDERS TEST ********************', function () {
                 .patch('/orders/update')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_product":"5fe927d19d04b12bfcf8fb9a",
-                    "count_product":3000
+                    "id_product": "5fe927d19d04b12bfcf8fb9a",
+                    "count_product": 3000
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(422);
+                    expect(res.body).to.be.an("Object");
+                    done();
+                });
+        });
+    });
+    describe('+ ORDERS DELETE', function () {
+        it('Delete by Orders True', function (done) {
+            chai.request(server)
+                .delete('/orders/delete')
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAwMzEwOTQsImV4cCI6MTYxMDAzNDY5NH0.gDX0pbMuhXpDKYTXW274mNetlL2q-HGt72WYcYY02a4" })
+                .send({
+                    "id_order": "5ff3fa076136284ec05c4fe2",
+                    "id_user": "5fe91d9e893b5d1db88ae1d6"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
@@ -190,6 +174,45 @@ describe('******************** ORDERS TEST ********************', function () {
                     done();
                 });
         });
+        it('Delete by Orders miss id_order', function (done) {
+            chai.request(server)
+                .delete('/orders/delete')
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAxMjM1NzgsImV4cCI6MTYxMDEyNzE3OH0.0hDCM1a5TrXCixF-bTvrSN0tgODNitTb_YX2FqkDv34" })
+                .send({
+                    "id_user": "5fe91d9e893b5d1db88ae1d6"
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(422);
+                    expect(res.body).to.be.an("Object");
+                    done();
+                });
+        });
+        it('Delete by Orders miss id user', function (done) {
+            chai.request(server)
+                .delete('/orders/delete')
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAxMjM1NzgsImV4cCI6MTYxMDEyNzE3OH0.0hDCM1a5TrXCixF-bTvrSN0tgODNitTb_YX2FqkDv34" })
+                .send({
+                    "id_order": "5ff3fa076136284ec05c4fe2"
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(422);
+                    expect(res.body).to.be.an("Object");
+                    done();
+                });
+        });
+        it('Delete by Orders not user hasOwn', function (done) {
+            chai.request(server)
+                .delete('/orders/delete')
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAxMjM1NzgsImV4cCI6MTYxMDEyNzE3OH0.0hDCM1a5TrXCixF-bTvrSN0tgODNitTb_YX2FqkDv34" })
+                .send({
+                    "id_order": "5fea3483e1e65e579048e82a",
+                    "id_user": "5ff686074c1ab616ea289d5d"
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
+                    done();
+                });
+        });
     });
 })
- */

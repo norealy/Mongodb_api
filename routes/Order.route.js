@@ -5,9 +5,9 @@ const Validation = require('../middleware/Validator');
 
 router.post('/add',Validation.addOrder,OrdersCtrl.addOrders)
 
-router.patch('/update',OrdersCtrl.editOrder)
+router.patch('/update',Validation.editOrder,OrdersCtrl.editOrder)
 
-router.delete('/delete',OrdersCtrl.deleteByID)
+router.delete('/delete',Validation.deleteOrder,OrdersCtrl.deleteByID)
 
 router.get('/list_Orderuser/:id_user', OrdersCtrl.listOrders)
 

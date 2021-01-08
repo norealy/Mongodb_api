@@ -1,17 +1,11 @@
-process.env.NODE_ENV = 'development';
-
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-const should = chai.should();
 const expect = chai.expect;
 let server = require('../server');
 chai.use(chaiHttp);
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-describe('******************** Admin ********************',async function () {
-    await new Promise(r => setTimeout(r, 25000));
+
+describe('******************** Admin ********************', function () {
     describe('+ Admin list', function () {
         it('List Admin is array data', function (done) {
             chai.request(server)
@@ -27,8 +21,8 @@ describe('******************** Admin ********************',async function () {
             chai.request(server)
                 .get('/manager-admin/list')
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -49,7 +43,7 @@ describe('******************** Admin ********************',async function () {
                 .get('/manager-admin/list/5fecec28833e1a3d84f4b7')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -59,7 +53,7 @@ describe('******************** Admin ********************',async function () {
                 .get('/manager-admin/list/5fecec28833e1a3d84f4b7')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAwNzQzMzUsImV4cCI6MTYxMDA3NzkzNX0.Svg-S-iTw5eYYXFECd1i9HY47YdvK3S_AEJ0PGh1jvI" })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -68,92 +62,92 @@ describe('******************** Admin ********************',async function () {
     describe('+ Add Admin', function () {
         it('Add Admin true', function (done) {
             chai.request(server)
-                .post('/manager-admin/list/5feceb88fba6023cc59684c3')
+                .post('/manager-admin/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin1122",
-                    "password":"Password328",
-                    "email":"xdatgd@gmail.com",
-                    "phone":"0332302222"
+                    "username": "admin1122222",
+                    "password": "Password328",
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302222"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(201);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Add Admin exits username', function (done) {
             chai.request(server)
-                .post('/manager-admin/list/5feceb88fba6023cc59684c3')
+                .post('/manager-admin/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin1122",
-                    "password":"Password328",
-                    "email":"xdatgd@gmail.com",
-                    "phone":"0332302222"
+                    "username": "admin112222233333",
+                    "password": "Password328",
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302222"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Add Admin miss username', function (done) {
             chai.request(server)
-                .post('/manager-admin/list/5feceb88fba6023cc59684c3')
+                .post('/manager-admin/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "password":"Password328",
-                    "email":"xdatgd@gmail.com",
-                    "phone":"0332302222"
+                    "password": "Password328",
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302222"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Add Admin miss password', function (done) {
             chai.request(server)
-                .post('/manager-admin/list/5feceb88fba6023cc59684c3')
+                .post('/manager-admin/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin1122",
-                    "email":"xdatgd@gmail.com",
-                    "phone":"0332302222"
+                    "username": "admin1122",
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302222"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Add Admin miss email', function (done) {
             chai.request(server)
-                .post('/manager-admin/list/5feceb88fba6023cc59684c3')
+                .post('/manager-admin/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin1122",
-                    "password":"Password328",
-                    "phone":"0332302222"
+                    "username": "admin1122",
+                    "password": "Password328",
+                    "phone": "0332302222"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
-        it('Add Admin miss phone username', function (done) {
+        it('Add Admin miss phone ', function (done) {
             chai.request(server)
-                .post('/manager-admin/list/5feceb88fba6023cc59684c3')
+                .post('/manager-admin/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin1122",
-                    "password":"Password328",
-                    "email":"xdatgd@gmail.com",
+                    "username": "admin1122",
+                    "password": "Password328",
+                    "email": "xdatgd@gmail.com",
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -162,12 +156,12 @@ describe('******************** Admin ********************',async function () {
     describe('+ Admin Change password', function () {
         it('Admin Change password true', function (done) {
             chai.request(server)
-                .patch('/manager-admin/list/5feceb88fba6023cc59684c3')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
+                .patch('/manager-admin/change-password')
+                .set({ "access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjEwMTE5NDExLCJleHAiOjE2MTAxMjMwMTF9.zJuEjJBGqnXtRlXBG_dVAPqs8MmgORL2_6cQ6e-b4B0" })
                 .send({
-                    "id":"5ff6123a0fb22a234101bbe0",
+                    "id": "5ff32e4fc2ddc823d59b2526",
                     "password": "Password328",
-                    "newPassword": "Password3288"
+                    "newPassword": "Password328"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
@@ -177,57 +171,57 @@ describe('******************** Admin ********************',async function () {
         });
         it('Admin Change password miss id', function (done) {
             chai.request(server)
-                .patch('/manager-admin/list/5feceb88fba6023cc59684c3')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
+                .patch('/manager-admin/change-password')
+                .set({ "access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjEwMTE5NDExLCJleHAiOjE2MTAxMjMwMTF9.zJuEjJBGqnXtRlXBG_dVAPqs8MmgORL2_6cQ6e-b4B0" })
                 .send({
                     "password": "Password328",
                     "newPassword": "Password3288"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Admin Change id does not exits', function (done) {
             chai.request(server)
-                .patch('/manager-admin/list/5feceb88fba6023cc59684c3')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
+                .patch('/manager-admin/change-password')
+                .set({ "access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjEwMTE5NDExLCJleHAiOjE2MTAxMjMwMTF9.zJuEjJBGqnXtRlXBG_dVAPqs8MmgORL2_6cQ6e-b4B0" })
                 .send({
-                    "id":"5ff6123a0fb22a23410",
+                    "id": "5ff32e4fc2ddc823d56",
                     "password": "Password328",
-                    "newPassword": "Password3288"
+                    "newPassword": "Password328"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Admin Change password miss old password', function (done) {
             chai.request(server)
-                .patch('/manager-admin/list/5feceb88fba6023cc59684c3')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
+                .patch('/manager-admin/change-password')
+                .set({ "access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjEwMTE5NDExLCJleHAiOjE2MTAxMjMwMTF9.zJuEjJBGqnXtRlXBG_dVAPqs8MmgORL2_6cQ6e-b4B0" })
                 .send({
-                    "id":"5ff6123a0fb22a234101bbe0",
+                    "id": "5ff32e4fc2ddc823d59b2526",
                     "newPassword": "Password3288"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
         });
         it('Admin Change password miss new password', function (done) {
             chai.request(server)
-                .patch('/manager-admin/list/5feceb88fba6023cc59684c3')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
+                .patch('/manager-admin/change-password')
+                .set({ "access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjEwMTE5NDExLCJleHAiOjE2MTAxMjMwMTF9.zJuEjJBGqnXtRlXBG_dVAPqs8MmgORL2_6cQ6e-b4B0" })
                 .send({
-                    "id":"5ff6123a0fb22a234101bbe0",
+                    "id": "5ff32e4fc2ddc823d59b2526",
                     "password": "Password328",
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
+                    expect(res).to.have.status(422);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -247,7 +241,7 @@ describe('******************** Admin ********************',async function () {
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -262,8 +256,8 @@ describe('******************** Admin ********************',async function () {
                     "address": "NKT-CG-HN"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -279,8 +273,8 @@ describe('******************** Admin ********************',async function () {
                     "address": "NKT-CG-HN"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -295,8 +289,8 @@ describe('******************** Admin ********************',async function () {
                     "address": "NKT-CG-HN"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(422);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -312,7 +306,7 @@ describe('******************** Admin ********************',async function () {
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -327,7 +321,7 @@ describe('******************** Admin ********************',async function () {
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -338,11 +332,11 @@ describe('******************** Admin ********************',async function () {
                 .delete('/manager-admin/delete/id')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "id":"5feceb0744de923a1b334555"
+                    "id": "5ff3f8013c27154d3db6f4dd"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -351,11 +345,11 @@ describe('******************** Admin ********************',async function () {
                 .delete('/manager-admin/delete/id')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAwNzQzMzUsImV4cCI6MTYxMDA3NzkzNX0.Svg-S-iTw5eYYXFECd1i9HY47YdvK3S_AEJ0PGh1jvI" })
                 .send({
-                    "id":"5feceb0744de923a1b334555"
+                    "id": "5ff3f83e6f711e4d6760637b"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -364,11 +358,11 @@ describe('******************** Admin ********************',async function () {
                 .delete('/manager-admin/delete/id')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "id":"5feceb0744de923a1b3345"
+                    "id": "5ff3f83e6f711e4d676063b"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -379,11 +373,11 @@ describe('******************** Admin ********************',async function () {
                 .delete('/manager-admin/delete/username')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin112"
+                    "username": "admin112255"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -392,11 +386,11 @@ describe('******************** Admin ********************',async function () {
                 .delete('/manager-admin/delete/username')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAwNzQzMzUsImV4cCI6MTYxMDA3NzkzNX0.Svg-S-iTw5eYYXFECd1i9HY47YdvK3S_AEJ0PGh1jvI" })
                 .send({
-                    "id":"5feceb0744de923a1b334555"
+                    "username": "admin1122"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });
@@ -405,11 +399,11 @@ describe('******************** Admin ********************',async function () {
                 .delete('/manager-admin/delete/username')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2MTIzYTBmYjIyYTIzNDEwMWJiZTAiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTYyMDk2LCJleHAiOjE2MDk5NjU2OTZ9.8N_ZQAlRt0_A167kwLqzwyA6x0hkqJw-iYyIp2kEv4k" })
                 .send({
-                    "username":"admin"
+                    "username": "admin1122"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
+                    expect(res).to.have.status(401);
+                    expect(res.body).to.be.an("Object");
                     done();
                 });
         });

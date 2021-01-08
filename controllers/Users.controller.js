@@ -27,18 +27,18 @@ const addUser = async (req, res) => {
 		await newToken.save();
 		res.status(201).send({ user, Access_Token: access_Token, Refresh_Token: refresh_token, uid_token: uid_token });
 	} catch (error) {
-		console.log(error)
-		res.send("Username exist")
+		return res.status(401).send("Add user Fail !");
 	}
 };
 
 const changePass = async (req, res) => {
 	try {
 		let { id, password, newPassword } = req.body;
-		const userT = await User.findOne({ "_id": id });
+
+		const userT = await User.findOne({ _id : id });
+		if(!userT) return res.status(401).send("Change Password Fail !");
 		const hashPassword = await hashPass(newPassword);
 		const check = await checkPass(password, userT.password);
-		console.log("Check:", check)
 		if (!check) return res.status(401).send("Wrong password !");
 		await User.updateOne({ _id: id }, {
 			$set:
@@ -48,7 +48,6 @@ const changePass = async (req, res) => {
 			return res.status(200).send("Change password ok !");
 		});
 	} catch (error) {
-		console.log(error)
 		return res.status(401).send("Change Password Fail !");
 	}
 };
@@ -70,10 +69,9 @@ const forgetPassword = async (req, res) => {
 const changeInfo = async (req, res) => {
 	try {
 		let user = req.body;
-		await User.findOneAndUpdate({ "_id": user.id }, { "avatar": user.avatar, "fullname": user.fullname, "phone": user.phone, "address": user.address }, { new: true }, function (err, data) {
-			if (err) return res.status(401).send("Change Info Fail !");
-			return res.status(200).send("Change Info ok !");
-		});
+		const data = await User.findOneAndUpdate({ "_id": user.id }, { "avatar": user.avatar, "fullname": user.fullname, "phone": user.phone, "address": user.address }, { new: true });
+		if (!data) return res.status(401).send("Change Info Fail !");
+		return res.status(200).send("Change Info ok !");
 	} catch (error) {
 		return res.status(401).send("Change Info Fail !");
 	}
@@ -99,20 +97,18 @@ const userID = async (req, res) => {
 
 const deleteByID = async (req, res) => {
 	try {
-		await User.deleteOne({ _id: req.body.id }, function (err, data) {
-			if (err) return res.status(401).send("Delete user Fail !");
-			return res.status(200).send("Delete user OK !");
-		});
+		const data = await User.findByIdAndRemove({ _id: req.body.id });
+		if (!data) return res.status(401).send("Delete user Fail !");
+		return res.status(200).send("Delete user OK !");
 	} catch (error) {
 		return res.status(401).send("Delete user Fail !");
 	}
 };
 const deleteByUsername = async (req, res) => {
 	try {
-		await User.deleteMany({ "username": req.body.username }, function (err, data) {
-			if (err) return res.status(401).send("Delete user Fail !");
-			return res.status(200).send("Delete user OK !");
-		});
+		const data = await User.findByIdAndRemove({ username: req.body.username });
+		if (!data) return res.status(401).send("Delete user Fail !");
+		return res.status(200).send("Delete user OK !");
 	} catch (error) {
 		return res.status(401).send("Delete user Fail !");
 	}

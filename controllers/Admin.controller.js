@@ -74,20 +74,18 @@ const userID = async (req, res) => {
 
 const deleteByID = async (req, res) => {
 	try {
-		await Admin.deleteOne({ _id: req.body.id }, function (err, data) {
-			if (err) return res.status(401).send("Delete UserId Fail!");
-			return res.status(200).send(data);
-		});
+		const data = await Admin.findByIdAndRemove({ _id: req.body.id });
+		if (!data) return res.status(401).send("Delete UserId Fail!");
+		return res.status(200).send(data);
 	} catch (error) {
 		return res.status(401).send("Delete UserId Fail!");
 	}
 };
 const deleteByUsername = async (req, res) => {
 	try {
-		await Admin.deleteMany({ "username": req.body.username }, function (err, data) {
-			if (err) return res.status(401).send("Delete User Fail!");
-			return res.status(200).send('Delete User OK');
-		});
+		const data = await Admin.findOneAndRemove({ "username": req.body.username })
+		if (!data) return res.status(401).send("Delete UserId Fail!");
+		return res.status(200).send(data);
 	} catch (error) {
 		return res.status(401).send("Delete User Fail!");
 	}
