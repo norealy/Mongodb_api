@@ -4,6 +4,7 @@ require('./start/Database')();
 const express = require('express');
 const bodyParser = require('body-parser');
 const Routes = require('./start/Routes');
+const {logger} = require('./start/Logger')
 const port = process.env.PORT || 2000;
 const jws = require("jws");
 const app = express();
@@ -38,10 +39,13 @@ app.use('/', (req, res, next) => {
     return res.status(401).send("What do you want !");
 });
 
+// Logger(app);
+
 Routes(app);
 
 app.listen(port, () => {
     console.log(`Server started on ${port}`);
+    logger.info('info', { message: `Server started on ${port}` });
 });
 
 module.exports = app

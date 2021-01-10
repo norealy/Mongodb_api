@@ -1,0 +1,101 @@
+{"message":"Server started on 4000","level":"info"}
+{"message":"Server started on 4000","level":"info"}
+{"level":"info","message":"Server started on 4000"}
+{"level":"info","message":"Server started on 4000"}
+{"level":"info","message":"Server started on 4000"}
+undefined
+{"level":"info","message":"Server started on 4000"}
+{"level":"info","message":"Server started on 4000"}
+{"level":"info","message":"Server started on 4000"}
+{"level":"info","message":"Server started on 4000"}
+{"level":"info","message":"Server started on 4000"}
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+{"message":"info Server started on 4000","level":"info"}
+{"message":"info Server started on 4000","level":"info"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:42:50.681Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:42:53.669Z"}
+error: info Server started on 4000 {"timestamp":"2021-01-10T00:43:12.107Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:43:29.702Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:45:08.403Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:48:04.336Z"}
+info: Login with nrx2 {"timestamp":"2021-01-10T00:48:34.581Z"}
+error: Error: Validation login {"timestamp":"2021-01-10T00:48:41.788Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:49:00.885Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:49:22.996Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:49:41.688Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:49:56.715Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:50:09.765Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:50:22.706Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:52:20.884Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:53:53.246Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:54:12.645Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:54:41.031Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:55:38.656Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:55:45.241Z"}
+error: Validation login {"timestamp":"2021-01-10T00:55:48.561Z"}
+error: Validation login {"timestamp":"2021-01-10T00:55:52.814Z"}
+info: Login with nrx2 {"timestamp":"2021-01-10T00:55:58.082Z"}
+info: Login with nrx1 {"timestamp":"2021-01-10T00:56:09.716Z"}
+info: Login with nrx2 {"timestamp":"2021-01-10T00:56:14.940Z"}
+info: Login with admin2 {"timestamp":"2021-01-10T00:56:22.808Z"}
+info: info Server started on 4000 {"timestamp":"2021-01-10T00:56:39.117Z"}
+info: register username : admin1122222 {"timestamp":"2021-01-10T00:56:45.273Z"}
+info: register username : admin112222233333 {"timestamp":"2021-01-10T00:56:45.801Z"}
+error: Validation register {"timestamp":"2021-01-10T00:56:46.255Z"}
+error: Validation register {"timestamp":"2021-01-10T00:56:46.282Z"}
+error: Validation register {"timestamp":"2021-01-10T00:56:46.295Z"}
+error: Validation register {"timestamp":"2021-01-10T00:56:46.303Z"}
+info: changePassword product by id: 5ff32e4fc2ddc823d59b2526 {"timestamp":"2021-01-10T00:56:46.309Z"}
+error: Validation changePassword {"timestamp":"2021-01-10T00:56:47.181Z"}
+info: changePassword product by id: 5ff32e4fc2ddc823d56 {"timestamp":"2021-01-10T00:56:47.205Z"}
+error: Validation changePassword {"timestamp":"2021-01-10T00:56:47.240Z"}
+error: Validation changePassword {"timestamp":"2021-01-10T00:56:47.256Z"}
+error: Validation updateInfo {"timestamp":"2021-01-10T00:56:47.824Z"}
+info: deleteIdUser id: 5ff3f8013c27154d3db6f4dd {"timestamp":"2021-01-10T00:56:48.588Z"}
+info: deleteIdUser id: 5ff3f83e6f711e4d676063b {"timestamp":"2021-01-10T00:56:48.964Z"}
+info: deleteUsername username: admin112255 {"timestamp":"2021-01-10T00:56:48.982Z"}
+info: deleteUsername username: admin1122 {"timestamp":"2021-01-10T00:56:49.377Z"}
+info: Login with nrx2 {"timestamp":"2021-01-10T00:56:49.730Z"}
+error: Validation login {"timestamp":"2021-01-10T00:56:50.640Z"}
+error: Validation login {"timestamp":"2021-01-10T00:56:50.647Z"}
+info: Login with admin2 {"timestamp":"2021-01-10T00:56:50.652Z"}
+error: Validation login {"timestamp":"2021-01-10T00:56:51.425Z"}
+error: Validation login {"timestamp":"2021-01-10T00:56:51.435Z"}
+error: Validation addOrder {"timestamp":"2021-01-10T00:56:54.139Z"}
+error: Validation addOrder {"timestamp":"2021-01-10T00:56:54.147Z"}
+error: Validation addOrder {"timestamp":"2021-01-10T00:56:54.155Z"}
+error: Validation editOrder {"timestamp":"2021-01-10T00:56:54.561Z"}
+error: Validation editOrder {"timestamp":"2021-01-10T00:56:54.572Z"}
+error: Validation deleteOrder {"timestamp":"2021-01-10T00:56:54.957Z"}
+error: Validation deleteOrder {"timestamp":"2021-01-10T00:56:54.963Z"}
+info: Add product by : 5fea2a46474dd34da20aa3f5 {"timestamp":"2021-01-10T00:57:01.393Z"}
+error: Validation addProduct {"timestamp":"2021-01-10T00:57:01.821Z"}
+error: Validation addProduct {"timestamp":"2021-01-10T00:57:01.852Z"}
+error: Validation addProduct {"timestamp":"2021-01-10T00:57:01.860Z"}
+error: Validation addProduct {"timestamp":"2021-01-10T00:57:01.868Z"}
+error: Validation addProduct {"timestamp":"2021-01-10T00:57:01.873Z"}
+info: Add product by : 5fea2a46474dd34da20aa3f5 {"timestamp":"2021-01-10T00:57:01.881Z"}
+info: register username : nguyendat3328 {"timestamp":"2021-01-10T00:57:06.433Z"}
+error: Validation register {"timestamp":"2021-01-10T00:57:07.222Z"}
+error: Validation register {"timestamp":"2021-01-10T00:57:07.229Z"}
+error: Validation register {"timestamp":"2021-01-10T00:57:07.238Z"}
+error: Validation register {"timestamp":"2021-01-10T00:57:07.247Z"}
+error: Validation register {"timestamp":"2021-01-10T00:57:07.254Z"}
+info: changePassword product by id: 5ff686074c1ab616ea289d5d {"timestamp":"2021-01-10T00:57:07.262Z"}
+error: Validation changePassword {"timestamp":"2021-01-10T00:57:08.143Z"}
+info: changePassword product by id: 5ff770e492ea1f18ef4075 {"timestamp":"2021-01-10T00:57:08.151Z"}
+error: Validation changePassword {"timestamp":"2021-01-10T00:57:08.158Z"}
+error: Validation changePassword {"timestamp":"2021-01-10T00:57:08.166Z"}
+error: Validation updateInfo {"timestamp":"2021-01-10T00:57:08.615Z"}
+info: deleteIdUser id: 5fecedf9b2a97a3e4e638a9e {"timestamp":"2021-01-10T00:57:09.490Z"}
+info: deleteIdUser id: 5fea2a46474dd34da20aa3 {"timestamp":"2021-01-10T00:57:09.842Z"}
+info: deleteUsername username: user44 {"timestamp":"2021-01-10T00:57:09.850Z"}
+info: deleteUsername username: userX123 {"timestamp":"2021-01-10T00:57:09.870Z"}
+info: forgetPassword product by id: 5fec91203ad66522117d133a {"timestamp":"2021-01-10T00:57:09.876Z"}
+info: forgetPassword product by id: 5fec91203ad66522117d13 {"timestamp":"2021-01-10T00:57:10.270Z"}
+error: Validation forgetPassword {"timestamp":"2021-01-10T00:57:10.449Z"}

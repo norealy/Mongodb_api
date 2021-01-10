@@ -1,10 +1,13 @@
 const validation = require('../validates/Validation')
+const {logger} = require('../start/Logger')
 const login = async function (req, res, next) {
     try {
         if (req.body.username && req.body.password) {
             await validation.authSchema.validateAsync(req.body);
+            logger.info(`Login with ${req.body.username}`)
             return next();
         } else {
+            logger.error(`Validation login`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Login failed",
@@ -12,6 +15,7 @@ const login = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation login`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Login failed",
@@ -23,8 +27,10 @@ const register = async function (req, res, next) {
     try {
         if (req.body.username && req.body.password && req.body.email && req.body.phone) {
             await validation.registerSchema.validateAsync(req.body);
+            logger.info(`register username : ${req.body.username}`)
             return next();
         } else {
+            logger.error(`Validation register`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Register failed",
@@ -32,6 +38,7 @@ const register = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation register`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Login failed",
@@ -43,8 +50,10 @@ const addProduct = async function (req, res, next) {
     try {
         if (req.body.id_seller && req.body.price && req.body.description && req.body.count_product) {
             await validation.productSchema.validateAsync(req.body);
+            logger.info(`Add product by : ${req.body.id_seller}`)
             return next();
         } else {
+            logger.error(`Validation addProduct`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Add product failed",
@@ -52,6 +61,7 @@ const addProduct = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation addProduct`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Add product failed",
@@ -65,6 +75,7 @@ const addOrder = async function (req, res, next) {
             await validation.orderSchema.validateAsync(req.body);
             return next();
         } else {
+            logger.error(`Validation addOrder`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Add orders failed",
@@ -72,6 +83,7 @@ const addOrder = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation addOrder`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Add orders failed",
@@ -84,8 +96,10 @@ const changePassword = async function (req, res, next) {
     try {
         if (req.body.id && req.body.password && req.body.newPassword) {
             await validation.changePasswordSchema.validateAsync(req.body);
+            logger.info(`changePassword product by id: ${req.body.id}`)
             return next();
         } else {
+            logger.error(`Validation changePassword`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Change password failed",
@@ -93,6 +107,7 @@ const changePassword = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation changePassword`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Change password failed",
@@ -104,8 +119,10 @@ const forgetPassword = async function (req, res, next) {
     try {
         if (req.body.id && req.body.newPassword) {
             await validation.forgetPasswordSchema.validateAsync(req.body);
+            logger.info(`forgetPassword product by id: ${req.body.id}`)
             return next();
         } else {
+            logger.error(`Validation forgetPassword`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Forget password failed",
@@ -113,6 +130,7 @@ const forgetPassword = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation forgetPassword`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Forget password failed",
@@ -126,6 +144,7 @@ const updateInfo = async function (req, res, next) {
             await validation.updateInfoSchema.validateAsync(req.body);
             return next();
         } else {
+            logger.error(`Validation updateInfo`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Update information failed",
@@ -133,6 +152,7 @@ const updateInfo = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation updateInfo`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Update information failed",
@@ -144,8 +164,10 @@ const deleteIdUser = async function (req, res, next) {
     try {
         if (req.body.id) {
             await validation.deleteIdUserSchema.validateAsync(req.body);
+            logger.info(`deleteIdUser id: ${req.body.id}`)
             return next();
         } else {
+            logger.error(`Validation deleteIdUser`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Delete User failed",
@@ -153,6 +175,7 @@ const deleteIdUser = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation deleteIdUser`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Delete User failed",
@@ -164,8 +187,10 @@ const deleteUsername = async function (req, res, next) {
     try {
         if (req.body.username) {
             await validation.deleteUsernameSchema.validateAsync(req.body);
+            logger.info(`deleteUsername username: ${req.body.username}`)
             return next();
         } else {
+            logger.error(`Validation deleteUsername`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Delete User by username failed",
@@ -173,6 +198,7 @@ const deleteUsername = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation deleteUsername`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Delete User by username failed",
@@ -186,6 +212,7 @@ const updateProduct = async function (req, res, next) {
             await validation.updateProductSchema.validateAsync(req.body);
             return next();
         } else {
+            logger.error(`Validation updateProduct`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Update Product failed",
@@ -193,6 +220,7 @@ const updateProduct = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation updateProduct`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Update Product failed",
@@ -206,6 +234,7 @@ const deleteProduct = async function (req, res, next) {
             await validation.updateProductSchema.validateAsync(req.body);
             return next();
         } else {
+            logger.error(`Validation deleteProduct`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Delete Product failed",
@@ -213,6 +242,7 @@ const deleteProduct = async function (req, res, next) {
             });
         }
     } catch (error) {
+        logger.error(`Validation deleteProduct`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Delete Product failed",
@@ -223,6 +253,7 @@ const deleteProduct = async function (req, res, next) {
 const editOrder = async function (req, res, next) {
     try {
         if (!req.body.id || !req.body.id_product || !req.body.count_product) {
+            logger.error(`Validation editOrder`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Edit Order failed",
@@ -232,6 +263,7 @@ const editOrder = async function (req, res, next) {
         await validation.editOrderSchema.validateAsync(req.body);
         return next();
     } catch (error) {
+        logger.error(`Validation editOrder`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Edit Order failed",
@@ -242,6 +274,7 @@ const editOrder = async function (req, res, next) {
 const deleteOrder = async function (req, res, next) {
     try {
         if (!req.body.id_order || !req.body.id_user) {
+            logger.error(`Validation deleteOrder`)
             return res.status(422).send({
                 "code": "E_VALIDATION",
                 "message": "Delete Order failed",
@@ -251,6 +284,7 @@ const deleteOrder = async function (req, res, next) {
         await validation.deleteOrderSchema.validateAsync(req.body);
         return next();
     } catch (error) {
+        logger.error(`Validation deleteOrder`)
         return res.status(422).send({
             "code": "E_VALIDATION",
             "message": "Delete Order failed",
