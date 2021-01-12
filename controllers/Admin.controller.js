@@ -37,22 +37,22 @@ const changeInfo = async (req, res) => {
 	}
 };
 
-const listUsers = async (req, res) => {
+const listAdmin = async (req, res) => {
 	try {
 		let arrayUser = await Admin.find().select('-password');
 		return res.status(200).send(arrayUser);
 	} catch (error) {
-		return res.status(401).send("list Users Fail!");
+		return res.status(401).send("list Admin Fail!");
 	}
 };
 
-const userID = async (req, res) => {
+const adminByID = async (req, res) => {
 	try {
 		let user = await Admin.findOne({ "_id": req.params.id }).select('-password');
 		return res.status(200).send(user);
 
 	} catch (error) {
-		return res.status(401).send("UserId Fail!");
+		return res.status(401).send("adminByID Fail!");
 	}
 };
 
@@ -78,8 +78,8 @@ const deleteByUsername = async (req, res) => {
 module.exports = {
 	changePass,
 	changeInfo,
-	listUsers,
-	userID,
+	listAdmin,
+	adminByID,
 	deleteByID,
 	deleteByUsername
 }

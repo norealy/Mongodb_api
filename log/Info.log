@@ -1,1 +1,19 @@
-Mon Jan 11 2021 12:02:28 GMT-0500 (Eastern Standard Time) POST 422 /add 1.1 5headers:[object Object]error message :null
+Tue Jan 12 2021 14:21:31 GMT-0500 (Eastern Standard Time) POST 200 /login 1.1 872
+    Request header :  {"content-type":"application/json","user-agent":"PostmanRuntime/7.26.8","accept":"*/*","postman-token":"9859229d-4ada-4c95-8170-cabd12661114","host":"localhost:4000","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"57","cookie":"Refresh-token=807556ac82d7e1a6f0cef4a87cbebe1ff71ad7a8926db20aded35137400a55e320924199"}
+    Mesage :  null 
+ Tue Jan 12 2021 14:22:14 GMT-0500 (Eastern Standard Time) POST 200 /login 1.1 834
+    Request header :  {"content-type":"application/json","user-agent":"PostmanRuntime/7.26.8","accept":"*/*","postman-token":"98b36656-40a0-4b3c-a7ec-e61993b02027","host":"localhost:4000","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"57","cookie":"Refresh-token=872c5eacd68de7f3f0c3a3f87fbebe4da71ed7a8943cb70ad8db0332165e54b87b9e1295"}
+    Mesage :  null 
+ Tue Jan 12 2021 14:24:05 GMT-0500 (Eastern Standard Time) GET 200 /microsoft 1.1 1859
+    Request header :  {"host":"localhost:4000","connection":"keep-alive","upgrade-insecure-requests":"1","user-agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36","accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9","sec-fetch-site":"cross-site","sec-fetch-mode":"navigate","sec-fetch-dest":"document","sec-ch-ua":"\"Google Chrome\";v=\"87\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"87\"","sec-ch-ua-mobile":"?0","accept-encoding":"gzip, deflate, br","accept-language":"en-US,en;q=0.9,vi;q=0.8"}
+    Mesage :  null 
+ Tue Jan 12 2021 14:24:27 GMT-0500 (Eastern Standard Time) GET 200 /google 1.1 1153
+    Request header :  {"host":"localhost:4000","connection":"keep-alive","upgrade-insecure-requests":"1","user-agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36","accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9","sec-fetch-site":"cross-site","sec-fetch-mode":"navigate","sec-fetch-dest":"document","sec-ch-ua":"\"Google Chrome\";v=\"87\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"87\"","sec-ch-ua-mobile":"?0","accept-encoding":"gzip, deflate, br","accept-language":"en-US,en;q=0.9,vi;q=0.8"}
+    Mesage :  null 
+ Tue Jan 12 2021 14:26:46 GMT-0500 (Eastern Standard Time) POST 200 /login 1.1 833
+    Request header :  {"content-type":"application/json","user-agent":"PostmanRuntime/7.26.8","accept":"*/*","postman-token":"874b94de-21fe-4a84-99de-4e5a82efe69e","host":"localhost:4000","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"57","cookie":"Refresh-token=d6775ca7d0deebf1f095a3fb7bbebe1ef612d7a8923bb60adddb0260165c56ea2c9e1294"}
+    Mesage :  null 
+ Tue Jan 12 2021 14:26:50 GMT-0500 (Eastern Standard Time) POST 200 /login 1.1 776
+    Request header :  {"content-type":"application/json","user-agent":"PostmanRuntime/7.26.8","accept":"*/*","postman-token":"bacb37dc-62f1-4248-9bfd-f24bf86e0165","host":"localhost:4000","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"57","cookie":"Refresh-token=8d2357a280d6ebf5f092a3ae2cbebe4af61ad7f2c33ce70ad8d55365420c05e221c3129d"}
+    Mesage :  null 
+ 

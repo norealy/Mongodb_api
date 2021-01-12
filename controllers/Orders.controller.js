@@ -11,7 +11,6 @@ const listOrders = async (req, res) => {
 };
 
 const ordersID = async (req, res) => {
-  if (req.params.id) {
     try {
       let order = await Orders.findOne({ "_id": req.params.id , "id_user": req.uid});
       if(!order || order == null){
@@ -21,9 +20,6 @@ const ordersID = async (req, res) => {
     } catch (error) {
       return res.status(401).send("Fail");
     }
-  } else {
-    return res.status(401).send("Fail");
-  }
 };
 
 const addOrders = async (req, res) => {

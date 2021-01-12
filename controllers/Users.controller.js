@@ -1,4 +1,5 @@
 'use strict';
+const { deleteOne } = require('../models/Users.model');
 const User = require('../models/Users.model');
 const { hashPass, checkPass } = require('../utils/Password');
 
@@ -28,7 +29,7 @@ const forgetPassword = async (req, res) => {
 		const hashPassword = await hashPass(req.body.newPassword)
 		const userUpdate = await User.findOneAndUpdate({ username: user.username ,phone: user.phone ,email: user.email  }, { password: hashPassword }, { new: true });
 		if(userUpdate){
-			return res.status(200).send("Forget password ok !");
+			return res.status(200).send("Create password successful !");
 		}
 		return res.status(401).send("Forget Password Fail !");
 	} catch (error) {
@@ -50,6 +51,7 @@ const changeInfo = async (req, res) => {
 const listUsers = async (req, res) => {
 	try {
 		let arrayUser = await User.find().select('-password');
+		delete arrayUser._v
 		res.status(200).send(arrayUser);
 	} catch (error) {
 		return res.status(401).send("Show list Fail !");

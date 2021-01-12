@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 
 require('./start/Database')();
-// require('./start/LoggerCustom')(app);
+require('./start/LoggerCustom')(app);
 require('./start/Routes')(app);
 
 const port = ENV.get("PORT",2000)

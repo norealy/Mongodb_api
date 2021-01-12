@@ -1,11 +1,32 @@
-
+const fs = require('fs');
+const pathLib = require('path');
 const log = (startProcess, req, res, errorMessage, body) => {
     const { method, path, headers, httpVersion } = req;
     let processTime = new Date() - startProcess;
     const { statusCode } = res;
-    console.log(`${startProcess} ${method} ${statusCode} ${path} ${httpVersion} ${processTime}`);
-    console.log('Request header : ', headers);
-    console.log('Error mesage : ', errorMessage);
+    let logmessage = `${startProcess} ${method} ${statusCode} ${path} ${httpVersion} ${processTime}
+    Request header :  ${JSON.stringify(headers)}
+    Mesage :  ${errorMessage} \n `;
+    if(path === '/login' && statusCode ===200  && method =='POST'  ){
+        fs.appendFile(pathLib.resolve(__dirname,'..','log','Info.log'), logmessage, (err) => {
+            if (err) throw err;
+        });
+    }
+    else if((path === '/microsoft'||path === '/google') && statusCode ===200  && method =='GET'  ){
+        fs.appendFile(pathLib.resolve(__dirname,'..','log','Info.log'), logmessage, (err) => {
+            if (err) throw err;
+        });
+    }
+    else if( statusCode >=500){
+        fs.appendFile(pathLib.resolve(__dirname,'..','log','5xxError.log'), logmessage, (err) => {
+            if (err) throw err;
+        });
+    }
+    else if( statusCode >=400){
+        fs.appendFile(pathLib.resolve(__dirname,'..','log','4xxError.log'), logmessage, (err) => {
+            if (err) throw err;
+        });
+    }
 }
 
 const logger = (req, res, next) => {
@@ -15,7 +36,7 @@ const logger = (req, res, next) => {
     let body = [];
 
     //================= Handle Request ================
-    const reqError = error => { errorMessage = error.messages };
+    const reqError = error => { errorMessage = error };
     const reqData = chunk => body.push(chunk);
     const reqEnd = () => body = Buffer.concat(body).toString();
     req.on('data', reqData)
@@ -24,7 +45,7 @@ const logger = (req, res, next) => {
 
     //================= Handle Response ================
     const resError = error => {
-        log(startProcess, req, res, error.messages, body);
+        log(startProcess, req, res," error.messages", body);
         removeHandle();
     };
     const resClose = () => {
