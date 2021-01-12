@@ -7,7 +7,7 @@ const log = (startProcess, req, res, errorMessage, body) => {
     let logmessage = `${startProcess} ${method} ${statusCode} ${path} ${httpVersion} ${processTime}
     Request header :  ${JSON.stringify(headers)}
     Mesage :  ${errorMessage} \n `;
-    if(path === '/login' && statusCode ===200  && method =='POST'  ){
+    if((path === '/login'||path === '/admin/login') && statusCode ===200  && method =='POST'  ){
         fs.appendFile(pathLib.resolve(__dirname,'..','log','Info.log'), logmessage, (err) => {
             if (err) throw err;
         });
@@ -22,7 +22,7 @@ const log = (startProcess, req, res, errorMessage, body) => {
             if (err) throw err;
         });
     }
-    else if( statusCode >=400){
+    else if( statusCode >=400 && path !== '/favicon.ico'){
         fs.appendFile(pathLib.resolve(__dirname,'..','log','4xxError.log'), logmessage, (err) => {
             if (err) throw err;
         });
@@ -45,7 +45,7 @@ const logger = (req, res, next) => {
 
     //================= Handle Response ================
     const resError = error => {
-        log(startProcess, req, res," error.messages", body);
+        log(startProcess, req, res,error.messages, body);
         removeHandle();
     };
     const resClose = () => {
