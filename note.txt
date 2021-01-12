@@ -24,3 +24,17 @@ method + path,status code, error mesage, proccess time,headers,
 
 ============================
 System Log : Winston
+
+===============================
+forget password => thong tin nguoi dung k chuyen vao id . Done
+hien thi product theo id , thay id_seller = name seller . Done
+xoa chuc nag add user, add . Done
+token co id co thi k them id vao body . Done
+Auth chuyen ve toi uu + su dung .env.js . DOne
+test du lieu moi, true het . 
+ghi log vao file
+
+
+thay doi bao cao theo thu tu : Muc dich, Thanh phan doi tuong, muc dich doi tuong, phan thich chuc nang thuoc tinh doi tuong, he thong bao mat, validate , login google,microsoft, Luong xac thuc,Unit test, system log.
+Trinh bay luong xac thuc google hoac microsoft.
+trinh bay quan ly he thong system log

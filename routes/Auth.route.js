@@ -2,6 +2,7 @@ const express = require('express');
 const path = require("path");
 const router = express.Router();
 const Auth = require('../controllers/Auth.controller');
+const User = require('../controllers/Users.controller');
 const Validation = require('../middleware/Validator');
 
 router.get('/login',(req,res)=>{
@@ -26,6 +27,8 @@ router.post('/login' , Validation.login ,Auth.login);
 router.post('/admin/login', Validation.login , Auth.adminLoginAuth)
 
 router.post('/register', Validation.register ,Auth.register);
+
+router.patch('/forget-password',Validation.forgetPassword ,User.forgetPassword)
 
 router.post('/logout', async (req, res) => {
 	res.send("POst logout !");

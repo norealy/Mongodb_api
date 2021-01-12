@@ -2,23 +2,21 @@ const Orders = require('../models/Orders.model');
 const Products = require('../models/Product.model');
 
 const listOrders = async (req, res) => {
-  if (req.params.id_user) {
     try {
-      let arrayOrders = await Orders.find({ "id_user": req.params.id_user });
+      let arrayOrders = await Orders.find({ "id_user": req.uid });
       return res.status(200).send(arrayOrders);
     } catch (error) {
       return res.status(401).send("Fail");
     }
-  } else {
-    return res.status(401).send("Fail");
-  }
-
 };
 
 const ordersID = async (req, res) => {
   if (req.params.id) {
     try {
-      let order = await Orders.findOne({ "_id": req.params.id });
+      let order = await Orders.findOne({ "_id": req.params.id , "id_user": req.uid});
+      if(!order || order == null){
+        return res.status(401).send("Fail");
+      }
       return res.status(200).send(order);
     } catch (error) {
       return res.status(401).send("Fail");
@@ -38,7 +36,9 @@ const addOrders = async (req, res) => {
       total_money += product.price * prodOrder.count_product;
     }
     req.body.total_money = total_money;
+    
     let orderr = req.body;
+    orderr.id_user = req.uid;
     let newOrders = new Orders(orderr);
     await newOrders.save(function (err, data) {
       if (err) return res.status(401).send("Fail");
@@ -54,7 +54,7 @@ const editOrder = async (req, res) => {
   try {
     let orders = req.body;
     await Orders.findOneAndUpdate(
-      { "_id": orders.id },
+      { "_id": orders.id , "id_user":req.uid},
       { $set: { "Orders_details.$[element].count_product": orders.count_product } },
       {
         multi: true,
@@ -71,9 +71,8 @@ const editOrder = async (req, res) => {
 };
 
 const deleteByID = async (req, res) => {
-  if (req.body.id_order && req.body.id_user) {
     try {
-      const orderDelte = await Orders.findOneAndRemove({ "_id": req.body.id_order, "id_user": req.body.id_user })
+      const orderDelte = await Orders.findOneAndRemove({ "_id": req.body.id_order, "id_user": req.uid })
       if (orderDelte) {
         return res.status(200).send(orderDelte);
       } else {
@@ -82,9 +81,6 @@ const deleteByID = async (req, res) => {
     } catch (error) {
       return res.status(401).send("Fail");
     }
-  } else {
-    return res.status(401).send("Fail");
-  }
 };
 
 module.exports = {

@@ -1,5 +1,6 @@
+const ENV = require('../utils/Env')
 const bcrypt = require('bcrypt');
-const saltRounds = parseInt(process.env.BCRYPT_SALT || '12');
+const saltRounds = parseInt(ENV.get("BCRYPT_SALT",'12'));
 /**
  * 
  * @param {string} password 

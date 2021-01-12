@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const orderSchema = new Schema({
-    id_user: { type: String},
+    id_user: { type: String,required:true},
     bill_date:{ type: Date, default: Date.now() },
     total_money :Number,
     Orders_details:[

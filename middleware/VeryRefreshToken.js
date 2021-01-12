@@ -1,10 +1,11 @@
 const { decryptToken } = require('../utils/Encryption');
+const ENV = require('../utils/Env');
 const Tokens = require('../models/TokenModel');
 const jws = require('jws');
-const jwsSecret = process.env.JWS_SECRET || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
-const duration = parseInt(process.env.JWS_DURATION || 2400);
-const durationRefresh = parseInt(process.env.REFRESH_DUCATION || 31536000);
-const alg = process.env.JWS_ALG || "HS256";
+const jwsSecret = ENV.get("JWS_SECRET",'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=');
+const duration = parseInt(ENV.get("JWS_DURATION", '2400'));
+const durationRefresh = parseInt(ENV.get('REFRESH_DUCATION')|| '31536000');
+const alg = ENV.get("JWS_ALG","HS256");
 
 module.exports.verifyRefreshToken = async function (req, res) {
     let { refreshToken } = req.body;
@@ -26,7 +27,6 @@ module.exports.verifyRefreshToken = async function (req, res) {
                 });
         }
         const verified = await jws.verify(accessToken, alg, jwsSecret);
-        console.log(verified)
         if (!verified) return res.status(401).send({
             code: "E_INVALID_JWT_REFRESH_TOKEN",
             message: `Invalid refresh token `
@@ -61,7 +61,9 @@ module.exports.verifyRefreshToken = async function (req, res) {
         });
         return res.status(200).send({ Access_Token: newAccessToken });
     } catch (error) {
-        console.log(error)
-        return res.status(401).send('Invalid Token');
+        return res.status(401).send({
+            code: "E_INVALID_JWT_REFRESH_TOKEN",
+            message: `Invalid refresh token `
+        });
     }
 }

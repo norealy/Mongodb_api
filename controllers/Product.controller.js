@@ -1,9 +1,10 @@
 const Admin = require('../models/Admin.model');
 const Product = require('../models/Product.model');
+const Users = require('../models/Users.model');
 
 const listProducts = async (req, res) => {
 	try {
-		let arrayProduct = await Product.find();
+		let arrayProduct = await Product.find().select('-id_seller');
 		return res.status(200).send(arrayProduct);
 	} catch (error) {
 		return res.status(404).send("Not found !");
@@ -11,20 +12,21 @@ const listProducts = async (req, res) => {
 };
 
 const productID = async (req, res) => {
-	if (req.params.id) {
-		try {
-			let pproduct = await Product.findById(req.params.id);
-			return res.status(200).send(pproduct);
-		} catch (error) {
-			return res.status(404).send("Not found !");
-		}
-	} else {
+	try {
+		let pproduct = await Product.findById(req.params.id);
+		if(!pproduct) return res.status(404).send("Not found !");
+		const seller = await Users.findOne({_id:pproduct.id_seller}).select('-password');
+		let copy = Object.assign({}, pproduct._doc);
+		delete copy.id_seller;
+		copy.fullname = seller.fullname;
+		return res.status(200).send(copy);
+	} catch (error) {
 		return res.status(404).send("Not found !");
 	}
 };
 const productByCategories = async (req, res) => {
 	try {
-		let data = await Product.find({ 'Categories.name': req.body.category_name });
+		let data = await Product.find({ 'Categories.name': req.body.category_name }).select('-id_seller');
 		if (!data) return res.status(404).send("Not found !");
 		return res.status(200).send(data);
 	} catch (error) {
@@ -47,6 +49,7 @@ const productShowSeller = async (req, res) => {
 const addProduct = async (req, res) => {
 	try {
 		let product = req.body;
+		product.id_seller = req.uid;
 		let newProduct = new Product(product);
 		const data = await newProduct.save();
 		if (!data) return res.status(401).send("Save Fail !");
@@ -59,7 +62,7 @@ const addProduct = async (req, res) => {
 const updateCount = async (req, res) => {
 	if (req.body.id) {
 		let product = req.body;
-		await Product.find({ _id: req.body.id }, async function (err, data) {
+		await Product.findOne({ _id: req.body.id ,id_seller:req.uid}, async function (err, data) {
 			await Product.findOneAndUpdate(
 				{ _id: product.id },
 				{
@@ -80,7 +83,7 @@ const updateCount = async (req, res) => {
 const changeInfo = async (req, res) => {
 	try {
 		let product = req.body;
-		const data = await Product.findOneAndUpdate({ _id: product.id, id_seller: product.id_seller }
+		const data = await Product.findOneAndUpdate({ _id: product.id, id_seller:req.uid }
 			, {
 				"image": product.image,
 				"price": product.price,
@@ -94,23 +97,22 @@ const changeInfo = async (req, res) => {
 		}
 		return res.status(200).send("ChangeInfo product Successfully !")
 	} catch (error) {
-		console.log(error)
 		return res.status(401).send("ChangeInfo product fail !")
 	}
 };
 
 const deleteByID = async (req, res) => {
 	try {
-		const productDel = await Product.findOne({ _id: req.body.id, id_seller: req.body.id_seller });
+		const productDel = await Product.findOne({ _id: req.body.id, id_seller: req.uid });
 		if (!productDel) {
-			const admin = await Admin.findById(req.body.id_seller);
+			const admin = await Admin.findById(req.uid);
 			if (!admin) {
 				return res.status(401).send("Delete product fail !")
 			}
 			await Product.deleteOne({ _id: req.body.id });
 			return res.status(200).send(`Deleted product id :${req.body.id}`)
 		}
-		await Product.deleteOne({ _id: req.body.id, id_seller: req.body.id_seller });
+		await Product.deleteOne({ _id: req.body.id, id_seller: req.uid });
 		return res.status(200).send(`Deleted product id :${req.body.id}`)
 	} catch (error) {
 		return res.status(401).send("Delete product fail !")

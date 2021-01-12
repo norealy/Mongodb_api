@@ -1,4 +1,5 @@
 'use strict';
+const ENV = require('../utils/Env');
 const User = require('../models/Users.model');
 const { encryptToken } = require('../utils/Encryption');
 const Token = require('../models/TokenModel');
@@ -6,27 +7,28 @@ const qs = require('qs');
 const axios = require('axios');
 const jws = require('jws');
 const { v4: uuid_V4 } = require('uuid');
-const { hashPass, checkPass } = require('../utils/Password');
+const { hashPass } = require('../utils/Password');
 const { userLogin, adminLogin } = require('../utils/LoginChecked');
-const jwsSecret = process.env.JWS_SECRET || 'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=';
-const duration = parseInt(process.env.JWS_DURATION || 2400);
-const refreshDuration = parseInt(process.env.REFRESH_DUCATION || 2400);
+const jwsSecret = ENV.get("JWS_SECRET",'RW5jb2RlIHRvIEJhc2U2NCBmb3JtYXQ=');
+const duration = parseInt(ENV.get("JWS_DURATION", '2400'));
+const refreshDuration = parseInt(ENV.get("REFRESH_DUCATION",'2400'));
 /* Microsoft azure */
-const stateSecretAzure = process.env.AZURE_STATE || 'RANDOMID@@--123'
+const stateSecretAzure =  ENV.get("AZURE_STATE", 'RANDOMID@@--123');
 const stateAzure = Buffer.from(stateSecretAzure).toString('base64')
-const redirectUrlAzure = process.env.AZURE_REDIRECT || "http://localhost:4000/auth/microsoft";
+const redirectUrlAzure =  ENV.get("AZURE_REDIRECT", "http://localhost:4000/auth/microsoft");
 const scopeAzure = "user.read";
-const azureIdAzure = process.env.AZURE_ID;
-const secretAzure = process.env.AZURE_SECRET;
+const azureIdAzure =  ENV.get("AZURE_ID");
+const secretAzure =  ENV.get("AZURE_SECRET");
 /* Google Api console */
-const accessTypeGG = "online";
-const clientIdGG = process.env.GOOGLE_ID;
-const responseTypeGG = "code"
-const redirectUrlGG = process.env.GOOGLE_REDIRECT || "http://localhost:4000/auth/google";
+const clientIdGG =  ENV.get("GOOGLE_ID");
+const redirectUrlGG =  ENV.get("GOOGLE_REDIRECT","http://localhost:4000/auth/google");
+const secretGG =  ENV.get("GOOGLE_SECRET");
+const stateSecretGG =  ENV.get( "GOOGLE_STATE",'RANDOMID@@--123' )
+const stateGG = Buffer.from(stateSecretGG).toString('base64');
 const scopeGG = "openid profile email";
-const stateSecretGG = process.env.AZURE_STATE || 'RANDOMID@@--123'
-const stateGG = Buffer.from(stateSecretGG).toString('base64')
-const secretGG = process.env.GOOGLE_SECRET;
+const responseTypeGG = "code";
+const accessTypeGG = "online";
+const ALG = ENV.get('JWS_ALG','HS256')
 
 const redirectMicrosoft = (req, res) => {
 	try {
@@ -72,7 +74,7 @@ const getDataUserAzure = async (req, res) => {
 			const iat = Math.floor(new Date() / 1000);
 			const exp = iat + duration;
 			const accessToken = jws.sign({
-				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				header: { alg: ALG, typ: 'JWT' },
 				payload: { uid: uid, iat, exp },
 				secret: jwsSecret,
 			});
@@ -92,7 +94,7 @@ const getDataUserAzure = async (req, res) => {
 			const iat = Math.floor(new Date() / 1000);
 			const exp = iat + duration;
 			const accessToken = jws.sign({
-				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				header: { alg: ALG, typ: 'JWT' },
 				payload: { uid: user._id, iat, exp },
 				secret: jwsSecret
 			});
@@ -106,7 +108,7 @@ const getDataUserAzure = async (req, res) => {
 			});
 			const newToken = new Token({ user_uid: user._id, uid_token: uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 			await newToken.save();
-			return res.status(200).send({ user, Access_Token: accessToken, Refresh_Token: refreshToken });
+			return res.status(200).send({  Access_Token: accessToken, Refresh_Token: refreshToken });
 		}
 	} catch (error) {
 		return res.status(401).send("Azure login fail !!! ")
@@ -155,7 +157,7 @@ const getDataUserGG = async (req, res) => {
 			const iat = Math.floor(new Date() / 1000);
 			const exp = iat + duration;
 			const access_Token = jws.sign({
-				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				header: { alg: ALG , typ: 'JWT' },
 				payload: { uid: uid, iat, exp },
 				secret: jwsSecret,
 			});
@@ -174,7 +176,7 @@ const getDataUserGG = async (req, res) => {
 			const iat = Math.floor(new Date() / 1000);
 			const exp = iat + duration;
 			const accessToken = jws.sign({
-				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				header: { alg: ALG , typ: 'JWT' },
 				payload: { uid: user._id, iat, exp },
 				secret: jwsSecret
 			});
@@ -188,7 +190,7 @@ const getDataUserGG = async (req, res) => {
 			});
 			const newToken = new Token({ user_uid: user._id, uid_token: uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 			await newToken.save();
-			return res.status(200).send({ user, Access_Token: accessToken, refreshToken: refreshToken });
+			return res.status(200).send({ Access_Token: accessToken, refreshToken: refreshToken });
 		}
 	} catch (error) {
 		return res.status(401).send("Login Error")
@@ -204,7 +206,7 @@ const adminLoginAuth = async (req, res) => {
 			const iat = Math.floor(new Date() / 1000);
 			const exp = iat + duration;
 			const accessToken = jws.sign({
-				header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+				header: { alg: ALG , typ: 'JWT' },
 				payload: { uid: uid, roles: "admin", iat, exp },
 				secret: jwsSecret,
 			});
@@ -233,7 +235,7 @@ const login = async (req, res) => {
 		const iat = Math.floor(new Date() / 1000);
 		const exp = iat + duration;
 		const accessToken = jws.sign({
-			header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+			header: { alg: ALG || 'HS256', typ: 'JWT' },
 			payload: { uid: uid, iat, exp },
 			secret: jwsSecret,
 		});
@@ -263,10 +265,12 @@ const register = async (req, res) => {
 		const hashPassword = await hashPass(password)
 		const newuser = new User({ username, password: hashPassword, email, phone });
 		const user = await newuser.save();
+		let copyuser = Object.assign({},user._doc)
+		delete copyuser.password;
 		const iat = Math.floor(new Date() / 1000);
 		const exp = iat + duration;
 		const accessToken = jws.sign({
-			header: { alg: process.env.JWS_ALG || 'HS256', typ: 'JWT' },
+			header: { alg:ALG || 'HS256', typ: 'JWT' },
 			payload: { uid: user._id, iat, exp },
 			secret: jwsSecret
 		});
@@ -280,9 +284,9 @@ const register = async (req, res) => {
 		});
 		const newToken = new Token({ user_uid: user._id, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
 		await newToken.save();
-		return res.status(200).send({ user, Access_Token: accessToken, refreshToken: refreshToken, uid_token: uid_token });
+		return res.status(200).send({ user:copyuser, Access_Token: accessToken, refreshToken: refreshToken, uid_token: uid_token });
 	} catch (error) {
-		return res.status(401).send("Login Fail !")
+		return res.status(401).send("Register Fail !")
 	}
 };
 

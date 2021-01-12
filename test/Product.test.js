@@ -2,7 +2,6 @@
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-const should = chai.should();
 const expect = chai.expect;
 let server = require('../server');
 chai.use(chaiHttp);
@@ -20,9 +19,18 @@ describe('******************** Product ********************', function () {
         });
         it('Product ID', function (done) {
             chai.request(server)
-                .get('/products/list/5ff5e31b1225d25313be160d')
+                .get('/products/list/5ffccac2b9451a70b239064d')
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
+                    expect(res.body).to.be.an("Object");
+                    done();
+                });
+        });
+        it('Product ID not exist', function (done) {
+            chai.request(server)
+                .get('/products/list/5ffccac2b9451a70b239d')
+                .end(function (err, res) {
+                    expect(res).to.have.status(404);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -39,9 +47,10 @@ describe('******************** Product ********************', function () {
                     done();
                 });
         });
-        it('Product id seller', function (done) {
+        it('Product data by id seller', function (done) {
             chai.request(server)
                 .post('/products/list/seller')
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjODM5ZDNmM2ViZjEzN2M4YmI5M2YiLCJpYXQiOjE2MDk5NTAwNDAsImV4cCI6MTYwOTk1MzY0MH0.L4fqoxy91wSynl2nO46A5KqAVik2HKG8nohrka4FCqo" })
                 .send({
                     "id_seller": "5fe9f0070e9a1c17918952a2"
                 })
@@ -54,10 +63,22 @@ describe('******************** Product ********************', function () {
         it('Delete by ID Product and ID Admin', function (done) {
             chai.request(server)
                 .delete('/products/delete')
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWI4OGZiYTYwMjNjYzU5Njg0YzMiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjEwNDIyNTc3LCJleHAiOjE2MTA0MjYxNzd9.nwa2vmlNggf7jve6nkjhbwmkptx0rKm1uM5OjpJORTg" })
+                .send({
+                    "id":"5ff5dfbe68dda54fabaeb651"
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an("Object");
+                    done();
+                });
+        });
+        it('Delete by ID Product and ID Seller', function (done) {
+            chai.request(server)
+                .delete('/products/delete')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5ff3f8013c27154d3db6f4dd",
-                    "id": "5ff5d6888be61b47412fab26"
+                    "id": "5ffd226ae4333f45e5e095f2"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
@@ -70,8 +91,7 @@ describe('******************** Product ********************', function () {
                 .delete('/products/delete')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
-                    "id": "5ff5e31b1225d25313be160d"
+                    "id": "5ffcfc504d1ea21d8973bcd7"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(401);
@@ -79,26 +99,12 @@ describe('******************** Product ********************', function () {
                     done();
                 });
         });
-        it('Delete by ID Product and ID Seller', function (done) {
-            chai.request(server)
-                .delete('/products/delete')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
-                .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
-                    "id": "5ff689f7b4cabb1ac7ccaf42"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
+        
         it('add by Product => True', function (done) {
             chai.request(server)
                 .post('/products/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "image": "x3",
                     "price": 111111,
                     "description": "Nokia 2730",
@@ -115,7 +121,6 @@ describe('******************** Product ********************', function () {
             chai.request(server)
                 .post('/products/add')
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "image": "x3",
                     "price": 111111,
                     "description": "Nokia 2730",
@@ -128,29 +133,11 @@ describe('******************** Product ********************', function () {
                     done();
                 });
         });
-        it('add by Product miss id Seller', function (done) {
-            chai.request(server)
-                .post('/products/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
-                .send({
-                    "image": "x3",
-                    "price": 111111,
-                    "description": "Nokia 2730",
-                    "count_product": 111111,
-                    "Categories": { "name": "Điện Tử" }
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(422);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
         it('add by Product miss Image', function (done) {
             chai.request(server)
                 .post('/products/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "price": 111111,
                     "description": "Nokia 2730",
                     "count_product": 111111,
@@ -167,7 +154,6 @@ describe('******************** Product ********************', function () {
                 .post('/products/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "image": "x3",
                     "price": 111111,
                     "description": "Nokia 2730",
@@ -184,7 +170,6 @@ describe('******************** Product ********************', function () {
                 .post('/products/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "image": "x3",
                     "description": "Nokia 2730",
                     "count_product": 111111,
@@ -201,7 +186,6 @@ describe('******************** Product ********************', function () {
                 .post('/products/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "image": "x3",
                     "price": 111111,
                     "count_product": 111111,
@@ -218,7 +202,6 @@ describe('******************** Product ********************', function () {
                 .post('/products/add')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
-                    "id_seller": "5fea2a46474dd34da20aa3f5",
                     "image": "x3",
                     "price": 111111,
                     "description": "Nokia 2730",
@@ -236,7 +219,6 @@ describe('******************** Product ********************', function () {
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
                 .send({
                     "id": "5ff5dfbe68dda54fabaeb651",
-                    "id_seller": "5fe9f08ba3d822183d34d4a9",
                     "image": "x",
                     "price": 10000,
                     "description": "Iphone xs Pro",
@@ -252,10 +234,9 @@ describe('******************** Product ********************', function () {
         it('Edit by Product by Seller', function (done) {
             chai.request(server)
                 .put('/products/update')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MDk5OTE2OTgsImV4cCI6MTYwOTk5NTI5OH0.6EotwBLYfn3d2HDiKoWWu8wMYexRXLPZ5auBVPkCnII" })
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmU5ZjAwNzBlOWExYzE3OTE4OTUyYTIiLCJpYXQiOjE2MTA0MTg4NTUsImV4cCI6MTYxMDQyMjQ1NX0.QMi4DGL9VZG7Nt9OBNU9B2aS1I19JjBQfv581BCUE1Y" })
                 .send({
-                    "id": "5ff5dfbe68dda54fabaeb651",
-                    "id_seller": "5fe9f0070e9a1c17918952a2",
+                    "id": "5ff61d76cf16b22b34c0a3b8",
                     "image": "x",
                     "price": 10000,
                     "description": "Iphone xs Pro",

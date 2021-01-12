@@ -1,30 +1,12 @@
 'use strict';
 const Admin = require('../models/Admin.model');
-const Token = require('../models/TokenModel');
-const { encryptToken } = require('../utils/Encryption');
-const { v4: uuid_V4 } = require('uuid');
 const { hashPass, checkPass } = require('../utils/Password');
 
-const addAdmin = async (req, res) => {
-	try {
-		const { username, password, email, phone } = req.body;
-		const hashPassword = await hashPass(password);
-		const newuser = new Admin({ username, password: hashPassword, email: email, phone: phone });
-		const user = await newuser.save();
-		const iat = Math.floor(new Date() / 1000);
-		const uid_token = uuid_V4();
-		const refresh_token = encryptToken(uid_token)
-		const newToken = new Token({ user_uid: user._id, uid_token, is_revoke: false, created_At: iat, updated_at: iat });
-		await newToken.save();
-		return res.status(201).send({ Amin: user, Refresh_Token: refresh_token, uid_token: uid_token });
-	} catch (error) {
-		return res.status(401).send("Username exist !");
-	}
-};
 
 const changePass = async (req, res) => {
 	try {
-		let { id, password, newPassword } = req.body;
+		const id = req.uid;
+		let { password, newPassword } = req.body;
 		const userT = await Admin.findOne({ "_id": id });
 		const hashPassword = await hashPass(newPassword);
 		const check = await checkPass(password, userT.password);
@@ -32,7 +14,7 @@ const changePass = async (req, res) => {
 		await Admin.updateOne({ _id: id }, {
 			$set:
 				{ password: hashPassword }
-		}, function (err, data) {
+		}, function (err) {
 			if (err) return res.status(401).send("Change password Fail!");
 			return res.send("Change password ok !");
 		});
@@ -43,9 +25,11 @@ const changePass = async (req, res) => {
 
 const changeInfo = async (req, res) => {
 	try {
+		const id = req.uid;
 		let user = req.body;
-		await Admin.findOneAndUpdate({ "_id": user.id }, { "avatar": user.avatar, "fullname": user.fullname, "phone": user.phone, "address": user.address }, { new: true }, function (err, data) {
+		await Admin.findOneAndUpdate({ "_id": id }, { "avatar": user.avatar, "fullname": user.fullname, "phone": user.phone, "address": user.address }, { new: true ,select:'-password'}, function (err, data) {
 			if (err) return res.status(401).send("Change info Fail!");
+			delete data.password;
 			return res.status(200).send(data);
 		});
 	} catch (error) {
@@ -55,26 +39,26 @@ const changeInfo = async (req, res) => {
 
 const listUsers = async (req, res) => {
 	try {
-		let arrayUser = await Admin.find();
+		let arrayUser = await Admin.find().select('-password');
 		return res.status(200).send(arrayUser);
 	} catch (error) {
-		return res.send("list Users Fail!");
+		return res.status(401).send("list Users Fail!");
 	}
 };
 
 const userID = async (req, res) => {
 	try {
-		let user = await Admin.findOne({ "_id": req.params.id });
+		let user = await Admin.findOne({ "_id": req.params.id }).select('-password');
 		return res.status(200).send(user);
+
 	} catch (error) {
 		return res.status(401).send("UserId Fail!");
 	}
 };
 
-
 const deleteByID = async (req, res) => {
 	try {
-		const data = await Admin.findByIdAndRemove({ _id: req.body.id });
+		const data = await Admin.findByIdAndRemove({ _id: req.body.id }).select('-password');
 		if (!data) return res.status(401).send("Delete UserId Fail!");
 		return res.status(200).send(data);
 	} catch (error) {
@@ -83,7 +67,7 @@ const deleteByID = async (req, res) => {
 };
 const deleteByUsername = async (req, res) => {
 	try {
-		const data = await Admin.findOneAndRemove({ "username": req.body.username })
+		const data = await Admin.findOneAndRemove({ "username": req.body.username }).select('-password');
 		if (!data) return res.status(401).send("Delete UserId Fail!");
 		return res.status(200).send(data);
 	} catch (error) {
@@ -92,7 +76,6 @@ const deleteByUsername = async (req, res) => {
 };
 
 module.exports = {
-	addAdmin,
 	changePass,
 	changeInfo,
 	listUsers,

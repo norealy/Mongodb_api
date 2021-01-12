@@ -1,6 +1,5 @@
 const { encryptToken, decryptToken } = require('../utils/Encryption');
 const { assert, expect } = require('chai');
-console.log(encryptToken("NODE_ENV"));
 context('********* Encode Token *********', function () {
     it('encryptToken return true', function () {
         assert.equal(encryptToken("NODE_ENV"), 'fa5b2bd0b9ab9d96', 'encryptToken NODE_ENV equal `Encyption True`');

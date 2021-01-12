@@ -3,8 +3,6 @@ const router = express.Router();
 const AdminCtrl = require('../controllers/Admin.controller');
 const Validation = require('../middleware/Validator');
 
-router.post('/add', Validation.register , AdminCtrl.addAdmin)
-
 router.patch('/change-password',Validation.changePassword , AdminCtrl.changePass)
 
 router.put('/update/info',Validation.updateInfo, AdminCtrl.changeInfo)

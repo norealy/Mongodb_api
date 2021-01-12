@@ -60,107 +60,12 @@ describe('******************** Users ********************', async function () {
                 });
         });
     })
-    describe('+ Add Users', function () {
-        it('Add Users true', function (done) {
-            chai.request(server)
-                .post('/users/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
-                .send({
-                    "username": "nguyendat3328",
-                    "password": "Password328",
-                    "phone": "0332302626",
-                    "email": "xdatgd2@gmail.com"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-        it('Add Users exits username', function (done) {
-            chai.request(server)
-                .post('/users/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
-                .send({
-                    "username": "nguyennguyendat3328dat19981",
-                    "password": "Password328",
-                    "phone": "0332302626",
-                    "email": "xdatgd2@gmail.com"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(422);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-        it('Add Users miss username', function (done) {
-            chai.request(server)
-                .post('/users/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
-                .send({
-                    "password": "nguyennguyendat3328dat199812",
-                    "email": "xdatgd@gmail.com",
-                    "phone": "0332302222"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(422);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-        it('Add Users miss password', function (done) {
-            chai.request(server)
-                .post('/users/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
-                .send({
-                    "username": "nguyennguyendat3328dat1998124",
-                    "email": "xdatgd@gmail.com",
-                    "phone": "0332302222"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(422);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-        it('Add Users miss email', function (done) {
-            chai.request(server)
-                .post('/users/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
-                .send({
-                    "username": "nguyennguyendat3328dat1998123",
-                    "password": "Password328",
-                    "phone": "0332302222"
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(422);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-        it('Add Users miss phone username', function (done) {
-            chai.request(server)
-                .post('/users/add')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
-                .send({
-                    "username": "nguyennguyendat3328dat199815",
-                    "password": "Password328",
-                    "email": "xdatgd@gmail.com",
-                })
-                .end(function (err, res) {
-                    expect(res).to.have.status(422);
-                    expect(res.body).to.be.an("Object");
-                    done();
-                });
-        });
-    })
     describe('+ Users Change password', function () {
         it('Users Change password true', function (done) {
             chai.request(server)
                 .patch('/users/account/change-password')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmZkMjRhMmVjODQyNzQ4Njk3ZGU1Y2QiLCJpYXQiOjE2MTA0MjU1MDYsImV4cCI6MTYxMDQyOTEwNn0.Q22Y3etjv5ZZ0se_5ZywDuq2cVYhjgcefR6qIHzvfTM" })
                 .send({
-                    "id": "5ff686074c1ab616ea289d5d",
                     "password": "Password328",
                     "newPassword": "Password328"
                 })
@@ -170,16 +75,15 @@ describe('******************** Users ********************', async function () {
                     done();
                 });
         });
-        it('Users Change password miss id', function (done) {
+        it('Users Change password not token', function (done) {
             chai.request(server)
                 .patch('/users/account/change-password')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
                     "password": "Password328",
                     "newPassword": "Password3288"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(422);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -189,7 +93,6 @@ describe('******************** Users ********************', async function () {
                 .patch('/users/account/change-password')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "id": "5ff770e492ea1f18ef4075",
                     "password": "Password328",
                     "newPassword": "Password328"
                 })
@@ -204,7 +107,6 @@ describe('******************** Users ********************', async function () {
                 .patch('/users/account/change-password')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "id": "5ff770e492ea1f18ef407538",
                     "newPassword": "Password328"
                 })
                 .end(function (err, res) {
@@ -218,7 +120,6 @@ describe('******************** Users ********************', async function () {
                 .patch('/users/account/change-password')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "id": "5ff770e492ea1f18ef407538",
                     "password": "Password328"
                 })
                 .end(function (err, res) {
@@ -232,9 +133,8 @@ describe('******************** Users ********************', async function () {
         it('Users Change info true', function (done) {
             chai.request(server)
                 .put('/users/account/update-info')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhM2IxMTYzMTdhZjVlYjEyMzRlODQiLCJpYXQiOjE2MDkxODYwNjUsImV4cCI6MTYwOTE4OTY2NX0.-KQ2YqFKp63Bdi__hcF2y7PwRyHxgc0nIoaiPHMBL2I" })
                 .send({
-                    "id": "5fe9f08ba3d822183d34d4a9",
                     "fullname": "Nguyen Van Datttt",
                     "avatar": "image path",
                     "phone": "03323026666",
@@ -250,7 +150,6 @@ describe('******************** Users ********************', async function () {
             chai.request(server)
                 .put('/users/account/update-info')
                 .send({
-                    "id": "5fe9f08ba3d822183d34d4a9",
                     "fullname": "Nguyen Van Datttt",
                     "avatar": "image path",
                     "phone": "03323026666",
@@ -267,7 +166,6 @@ describe('******************** Users ********************', async function () {
                 .put('/users/account/update-info')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAwNzQzMzUsImV4cCI6MTYxMDA3NzkzNX0.Svg-S-iTw5eYYXFECd1i9HY47YdvK3S_AEJ0P" })
                 .send({
-                    "id": "5fe9f08ba3d822183d34d4a9",
                     "fullname": "Nguyen Van Datttt",
                     "avatar": "image path",
                     "phone": "03323026666",
@@ -279,10 +177,9 @@ describe('******************** Users ********************', async function () {
                     done();
                 });
         });
-        it('Users Change info miss id', function (done) {
+        it('Users Change info miss access token', function (done) {
             chai.request(server)
                 .put('/users/account/update-info')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
                     "fullname": "Nguyen Van Datttt",
                     "avatar": "image path",
@@ -290,7 +187,7 @@ describe('******************** Users ********************', async function () {
                     "address": "NKT-CG-HN"
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(422);
+                    expect(res).to.have.status(401);
                     expect(res.body).to.be.an("Object");
                     done();
                 });
@@ -298,9 +195,8 @@ describe('******************** Users ********************', async function () {
         it('Users Change info miss full name', function (done) {
             chai.request(server)
                 .put('/users/account/update-info')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhM2IxMTYzMTdhZjVlYjEyMzRlODQiLCJpYXQiOjE2MDkxODYwNjUsImV4cCI6MTYwOTE4OTY2NX0.-KQ2YqFKp63Bdi__hcF2y7PwRyHxgc0nIoaiPHMBL2I" })
                 .send({
-                    "id": "5fe9f08ba3d822183d34d4a9",
                     "avatar": "image path",
                     "phone": "03323026666",
                     "address": "NKT-CG-HN"
@@ -314,9 +210,8 @@ describe('******************** Users ********************', async function () {
         it('Users Change info miss phone number', function (done) {
             chai.request(server)
                 .put('/users/account/update-info')
-                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
+                .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVhM2IxMTYzMTdhZjVlYjEyMzRlODQiLCJpYXQiOjE2MDkxODYwNjUsImV4cCI6MTYwOTE4OTY2NX0.-KQ2YqFKp63Bdi__hcF2y7PwRyHxgc0nIoaiPHMBL2I" })
                 .send({
-                    "id": "5fe9f08ba3d822183d34d4a9",
                     "avatar": "image path",
                     "address": "NKT-CG-HN"
                 })
@@ -333,7 +228,7 @@ describe('******************** Users ********************', async function () {
                 .delete('/users/delete-id')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "id": "5fecedf9b2a97a3e4e638a9e"
+                    "id": "5ffc84a4515f933f6b2a756a"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
@@ -374,7 +269,7 @@ describe('******************** Users ********************', async function () {
                 .delete('/users/delete-username')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "username": "user44"
+                    "username": "ccadsa123"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
@@ -387,7 +282,7 @@ describe('******************** Users ********************', async function () {
                 .delete('/users/delete-username')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAxMTQ5MTgsImV4cCI6MTYxMDExODUxOH0.oDZvQxjReitwEnM0ypKjuM-cmzci5jrNWmpvkN7l14E" })
                 .send({
-                    "username": "userX12345"
+                    "username": "nrx51"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(401);
@@ -400,7 +295,7 @@ describe('******************** Users ********************', async function () {
                 .delete('/users/delete-username')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "username": "userX123"
+                    "username": "userX1"
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(401);
@@ -412,10 +307,12 @@ describe('******************** Users ********************', async function () {
     describe('+ Users Forget password', function () {
         it('Users Forget password true', function (done) {
             chai.request(server)
-                .patch('/users/account/forget-password')
+                .patch('/auth/forget-password')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
-                    "id": "5fec91203ad66522117d133a",
+                    "username": "ccadsa123",
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302626",
                     "newPassword": "Password3288"
                 })
                 .end(function (err, res) {
@@ -424,12 +321,14 @@ describe('******************** Users ********************', async function () {
                     done();
                 });
         });
-        it('Users forget password id does not exist', function (done) {
+        it('Users forget password username does not exist', function (done) {
             chai.request(server)
-                .patch('/users/account/forget-password')
+                .patch('/auth/forget-password')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmY2ODYwNzRjMWFiNjE2ZWEyODlkNWQiLCJpYXQiOjE2MTAwNzQzMzUsImV4cCI6MTYxMDA3NzkzNX0.Svg-S-iTw5eYYXFECd1i9HY47YdvK3S_AEJ0PGh1jvI" })
                 .send({
-                    "id": "5fec91203ad66522117d13",
+                    "username": "ccad11",
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302626",
                     "newPassword": "Password3288"
                 })
                 .end(function (err, res) {
@@ -438,11 +337,13 @@ describe('******************** Users ********************', async function () {
                     done();
                 });
         });
-        it('Users forget password miss id', function (done) {
+        it('Users forget password miss usernmae', function (done) {
             chai.request(server)
-                .patch('/users/account/forget-password')
+                .patch('/auth/forget-password')
                 .set({ "Access_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmVjZWIwNzQ0ZGU5MjNhMWIzMzQ1NTUiLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNjA5OTUyMDcyLCJleHAiOjE2MDk5NTU2NzJ9.NvsoD67o2E42gtZnEYY2XlRGHwWACZ3vTrg54OLxEOo" })
                 .send({
+                    "email": "xdatgd@gmail.com",
+                    "phone": "0332302626",
                     "newPassword": "Password3288"
                 })
                 .end(function (err, res) {

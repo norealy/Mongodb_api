@@ -9,8 +9,8 @@ router.patch('/update',Validation.editOrder,OrdersCtrl.editOrder)
 
 router.delete('/delete',Validation.deleteOrder,OrdersCtrl.deleteByID)
 
-router.get('/list_Orderuser/:id_user', OrdersCtrl.listOrders)
+router.get('/list_Orderuser', OrdersCtrl.listOrders)
 
-router.get('/list/:id', OrdersCtrl.ordersID)
+router.get('/list_OrderId/:id', OrdersCtrl.ordersID)
 
 module.exports = router;
