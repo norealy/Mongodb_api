@@ -1,1 +1,21 @@
 # Base javascript
+- JavaScript là một ngôn ngữ kịch bản.
+## Tìm hiểu về Basic Javascript
+- **Comment** : _là những dòng mã sẽ bỏ qua khi chạy. Co 2 cách comment trong jsvascript_ `//comment text , /*comment text*/`.
+- **Khai báo biến**  : _Để khai báo một biến ta sử dụng từ khóa const, let, var._
+- **Các toán tử trong javascript** : `+ , -, *, /, =, ++, --, %`
+- **Gán giá trị cho biến** : _sử dụng toán tử “=” để lưu giá trị cho biến_
+- **Độ dài của một chuỗi** : _Bạn có thể tìm độ dài của chuỗi bằng cách viết .length._
+- _Lưu nhiều giá trị trong 1 biến bằng cách sử dụng mảng `array` trong javavascript._
+- Thao tác array với các hàm : `push`(), `pop`(), `shiftt`(),`unshift`(), `splice`(),`slice`(), `indexOf`()
+- **Biến cục bộ (local)**: _biến được khai báo trong 1 hàm các phạm vi cục bộ trong hàm được khai báo._
+- **Biến toàn cục (global)** : _biến được khai báo với từ khóa var, khai báo lên trên đầu của chương trình chạy._
+- **Logic có điều kiện** _Từ khóa if yêu cầu thực thi đoạn mã trong dấu ngặc nhọn với điều kiện xác định được đặt trong ngoặc đơn._
+- **Xác định kiểu dữ liệu**:_một biến hoặc một giá trị bằng toán tử typeof_.
+- **Toán tử so sánh điều kiện**: != , !==, >, >=, < , <=, &&, || 
+- **Sử dụng logic rẽ nhánh switch-case** _Câu lệnh switch nhận giá trị dầu vào để xác định cách trường hợp xảy ra khác nhau ở các case sẽ được xử lý._
+- **Return** _Khi gặp câu lệnh return thì việc thực thi trong function sẽ dừng và trả lại kết quả là giá trị sau return._
+- **Xây dựng đối tượng**  _Các object tương tự các array , bạn có thể truy cập sửa đổi dữ liệu thông qua property của đối tượng đó_.
+- **Thêm property vào object** sử dụng `object.newProperty`.
+- **Sự tồn tại của property** trong 1 object* sử `.hasOwnProperty` hoặc `in`.
+- _Thay thế vòng lặp bằng sử dụng thuật toán đệ quy `Đệ quy` là khái niệm mà một hàm có thể được biểu diễn dưới dạng của chính nó.
