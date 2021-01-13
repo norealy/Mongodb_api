@@ -16,6 +16,6 @@ This tutorials about web api knowledge. It is intended for personal use only.
 10. [Authentication with Google](https://github.com/norealy/Mongodb_api/blob/master/documents/AuthenticationGoogle.md)
 11. [Authentication with Microsoft](https://github.com/norealy/Mongodb_api/blob/master/documents/AuthenticationMicrosoft.md)
 12. [Eviroment](https://github.com/norealy/Mongodb_api/blob/master/documents/ENV.EnvExample.md)
-13. [.git .gitignore](https://github.com/norealy/Mongodb_api/blob/master/documents/GitTutorials.md)
+13. [Git](https://github.com/norealy/Mongodb_api/blob/master/documents/GitTutorials.md)
 14. [Unitest](https://github.com/norealy/Mongodb_api/blob/master/documents/UnitTest.md)
 15. [System Logger](https://github.com/norealy/Mongodb_api/blob/master/documents/SystemLogger.md)
